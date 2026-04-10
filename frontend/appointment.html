@@ -533,10 +533,10 @@
 
           <div class="label" id="timeLabel">Available Time Slots</div>
           <div class="slots">
-            <button class="slot-btn" type="button" data-time="09:00:00">9:00 AM</button>
-            <button class="slot-btn active" type="button" data-time="10:00:00">10:00 AM</button>
-            <button class="slot-btn" type="button" data-time="13:00:00">1:00 PM</button>
-            <button class="slot-btn" type="button" data-time="14:00:00">2:00 PM</button>
+            <button class="slot-btn" type="button" data-time="09:00:00" data-label-en="9:00 AM" data-label-ar="9:00 ص">9:00 AM</button>
+            <button class="slot-btn active" type="button" data-time="10:00:00" data-label-en="10:00 AM" data-label-ar="10:00 ص">10:00 AM</button>
+            <button class="slot-btn" type="button" data-time="13:00:00" data-label-en="1:00 PM" data-label-ar="1:00 م">1:00 PM</button>
+            <button class="slot-btn" type="button" data-time="14:00:00" data-label-en="2:00 PM" data-label-ar="2:00 م">2:00 PM</button>
           </div>
 
           <div class="label" id="reasonLabel" style="margin-top:20px;">Reason for Visit</div>
@@ -680,13 +680,10 @@
       messageBox.className = "message-box";
     }
 
-    function formatTimeLabel(lang, text) {
-      if (lang === "ar") {
-        return text
-          .replace("AM", "ص")
-          .replace("PM", "م");
-      }
-      return text.replace("ص", "AM").replace("م", "PM");
+    function updateSlotLabels(lang) {
+      document.querySelectorAll(".slot-btn").forEach((btn) => {
+        btn.textContent = lang === "ar" ? btn.dataset.labelAr : btn.dataset.labelEn;
+      });
     }
 
     function applyLanguage(lang) {
@@ -708,7 +705,10 @@
       document.getElementById("logoutBtn").textContent = selected.navLogout;
       document.getElementById("sectionTitle").textContent = selected.sectionTitle;
       document.getElementById("doctorLabel").textContent = selected.doctorLabel;
-      document.getElementById("doctorOptionDefault").textContent = selected.doctorOptionDefault;
+      const defaultOption = document.getElementById("doctorOptionDefault");
+      if (defaultOption) {
+        defaultOption.textContent = selected.doctorOptionDefault;
+      }
       document.getElementById("dateLabel").textContent = selected.dateLabel;
       document.getElementById("timeLabel").textContent = selected.timeLabel;
       document.getElementById("reasonLabel").textContent = selected.reasonLabel;
@@ -721,12 +721,12 @@
       confirmBtn.textContent = selected.confirmBtn;
       cancelBtn.textContent = selected.cancelBtn;
 
-      const slotButtons = document.querySelectorAll(".slot-btn");
-      slotButtons.forEach((btn) => {
-        btn.textContent = formatTimeLabel(lang, btn.textContent);
-      });
+      updateSlotLabels(lang);
 
-      selectedTimeLabel = formatTimeLabel(lang, selectedTimeLabel);
+      const activeSlot = document.querySelector(".slot-btn.active");
+      if (activeSlot) {
+        selectedTimeLabel = lang === "ar" ? activeSlot.dataset.labelAr : activeSlot.dataset.labelEn;
+      }
       summaryTime.textContent = selectedTimeLabel;
 
       enBtn.classList.toggle("active", lang === "en");
@@ -742,49 +742,53 @@
 
     async function loadPatient() {
       const currentLang = localStorage.getItem("siteLanguage") || "en";
-      const response = await fetch(`http://localhost:5050/my-patient/${loggedInUser.user_id}`);
-      const data = await response.json();
 
-      if (data.success) {
-        patientId = data.patient.patient_id;
-      } else {
-        showMessage(content[currentLang].notFound, "error");
+      try {
+        const response = await fetch(`/my-patient/${loggedInUser.user_id}`);
+        const data = await response.json();
+
+        if (data.success) {
+          patientId = data.patient.patient_id;
+        } else {
+          showMessage(data.message || content[currentLang].notFound, "error");
+        }
+      } catch (error) {
+        console.error("Load patient error:", error);
+        showMessage(content[currentLang].connectionError, "error");
       }
     }
 
     async function loadDoctors() {
-  const currentLang = localStorage.getItem("siteLanguage") || "en";
+      const currentLang = localStorage.getItem("siteLanguage") || "en";
 
-  try {
-    const response = await fetch("http://localhost:5050/doctors");
-    const doctors = await response.json();
+      try {
+        const response = await fetch("/doctors");
+        const doctors = await response.json();
 
-    doctorSelect.innerHTML = "";
-    
-    const defaultOption = document.createElement("option");
-    defaultOption.value = "";
-    defaultOption.id = "doctorOptionDefault";
-    defaultOption.textContent = content[currentLang].doctorOptionDefault;
-    doctorSelect.appendChild(defaultOption);
+        doctorSelect.innerHTML = "";
 
-    doctors.forEach((doctor) => {
-      const option = document.createElement("option");
-      option.value = doctor.doctor_id;
-      option.textContent = `${doctor.full_name} - ${doctor.specialization || "Doctor"}`;
-      doctorSelect.appendChild(option);
-    });
-  } catch (error) {
-    console.error(error);
-    showMessage(content[currentLang].doctorsError, "error");
-  }
-}
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.id = "doctorOptionDefault";
+        defaultOption.textContent = content[currentLang].doctorOptionDefault;
+        doctorSelect.appendChild(defaultOption);
+
+        doctors.forEach((doctor) => {
+          const option = document.createElement("option");
+          option.value = doctor.doctor_id;
+          option.textContent = `${doctor.full_name} - ${doctor.specialization || "Doctor"}`;
+          doctorSelect.appendChild(option);
+        });
+      } catch (error) {
+        console.error("Load doctors error:", error);
+        showMessage(content[currentLang].doctorsError, "error");
+      }
+    }
 
     function updateSummary() {
       const selectedOption = doctorSelect.options[doctorSelect.selectedIndex];
-      summaryDoctor.textContent =
-        doctorSelect.value ? selectedOption.textContent : "-";
-      summaryDate.textContent =
-        appointmentDate.value ? appointmentDate.value : "-";
+      summaryDoctor.textContent = doctorSelect.value ? selectedOption.textContent : "-";
+      summaryDate.textContent = appointmentDate.value ? appointmentDate.value : "-";
       summaryTime.textContent = selectedTimeLabel;
     }
 
@@ -795,8 +799,12 @@
       button.addEventListener("click", function () {
         document.querySelectorAll(".slot-btn").forEach((b) => b.classList.remove("active"));
         this.classList.add("active");
+
         selectedTime = this.dataset.time;
-        selectedTimeLabel = this.textContent;
+
+        const currentLang = localStorage.getItem("siteLanguage") || "en";
+        selectedTimeLabel = currentLang === "ar" ? this.dataset.labelAr : this.dataset.labelEn;
+
         updateSummary();
       });
     });
@@ -825,7 +833,7 @@
       confirmBtn.textContent = content[currentLang].loadingText;
 
       try {
-        const response = await fetch("http://localhost:5050/appointments", {
+        const response = await fetch("/appointments", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -844,12 +852,22 @@
 
         if (data.success) {
           showMessage(content[currentLang].bookingSuccess, "success");
+          doctorSelect.value = "";
+          appointmentDate.value = "";
           reasonForVisit.value = "";
+          selectedTime = "10:00:00";
+
+          document.querySelectorAll(".slot-btn").forEach((b) => b.classList.remove("active"));
+          const defaultSlot = document.querySelector('.slot-btn[data-time="10:00:00"]');
+          defaultSlot.classList.add("active");
+          selectedTimeLabel = currentLang === "ar" ? defaultSlot.dataset.labelAr : defaultSlot.dataset.labelEn;
+
+          updateSummary();
         } else {
           showMessage(data.message || content[currentLang].bookingFailed, "error");
         }
       } catch (error) {
-        console.error(error);
+        console.error("Booking error:", error);
         showMessage(content[currentLang].connectionError, "error");
       } finally {
         confirmBtn.disabled = false;
@@ -865,11 +883,12 @@
       reasonForVisit.value = "";
       selectedTime = "10:00:00";
 
-      const currentLang = localStorage.getItem("siteLanguage") || "en";
-      selectedTimeLabel = currentLang === "ar" ? "10:00 ص" : "10:00 AM";
-
       document.querySelectorAll(".slot-btn").forEach((b) => b.classList.remove("active"));
-      document.querySelector('.slot-btn[data-time="10:00:00"]').classList.add("active");
+      const defaultSlot = document.querySelector('.slot-btn[data-time="10:00:00"]');
+      defaultSlot.classList.add("active");
+
+      const currentLang = localStorage.getItem("siteLanguage") || "en";
+      selectedTimeLabel = currentLang === "ar" ? defaultSlot.dataset.labelAr : defaultSlot.dataset.labelEn;
 
       updateSummary();
     });
@@ -880,8 +899,15 @@
       window.location.href = "home.html";
     });
 
-    enBtn.addEventListener("click", () => applyLanguage("en"));
-    arBtn.addEventListener("click", () => applyLanguage("ar"));
+    enBtn.addEventListener("click", () => {
+      applyLanguage("en");
+      updateSummary();
+    });
+
+    arBtn.addEventListener("click", () => {
+      applyLanguage("ar");
+      updateSummary();
+    });
 
     const savedLanguage = localStorage.getItem("siteLanguage") || "en";
     applyLanguage(savedLanguage);

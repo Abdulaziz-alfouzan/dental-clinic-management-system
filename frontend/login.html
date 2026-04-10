@@ -400,6 +400,8 @@
     const messageBox = document.getElementById("messageBox");
     const enBtn = document.getElementById("enBtn");
     const arBtn = document.getElementById("arBtn");
+    const rememberMe = document.getElementById("rememberMe");
+    const emailInput = document.getElementById("email");
 
     const content = {
       en: {
@@ -415,6 +417,7 @@
         passwordPlaceholder: "Enter your password",
         rememberText: "Remember Me",
         loginBtn: "Login",
+        loggingIn: "Logging in...",
         forgotText: "Forgot password?",
         registerText: "Don't have an account?",
         registerLinkText: "Register",
@@ -435,6 +438,7 @@
         passwordPlaceholder: "أدخل كلمة المرور",
         rememberText: "تذكرني",
         loginBtn: "دخول",
+        loggingIn: "جاري الدخول...",
         forgotText: "هل نسيت كلمة المرور؟",
         registerText: "ليس لديك حساب؟",
         registerLinkText: "سجل الآن",
@@ -466,7 +470,7 @@
       document.getElementById("logoSubtitle").textContent = selected.logoSubtitle;
       document.getElementById("pageTitle").textContent = selected.pageTitle;
       document.getElementById("emailLabel").textContent = selected.emailLabel;
-      document.getElementById("email").placeholder = selected.emailPlaceholder;
+      emailInput.placeholder = selected.emailPlaceholder;
       document.getElementById("passwordLabel").textContent = selected.passwordLabel;
       document.getElementById("password").placeholder = selected.passwordPlaceholder;
       document.getElementById("rememberText").textContent = selected.rememberText;
@@ -481,6 +485,22 @@
       localStorage.setItem("siteLanguage", lang);
     }
 
+    function loadRememberedEmail() {
+      const savedEmail = localStorage.getItem("rememberedEmail");
+      if (savedEmail) {
+        emailInput.value = savedEmail;
+        rememberMe.checked = true;
+      }
+    }
+
+    function handleRememberMe(email) {
+      if (rememberMe.checked) {
+        localStorage.setItem("rememberedEmail", email);
+      } else {
+        localStorage.removeItem("rememberedEmail");
+      }
+    }
+
     enBtn.addEventListener("click", () => applyLanguage("en"));
     arBtn.addEventListener("click", () => applyLanguage("ar"));
 
@@ -489,7 +509,7 @@
 
       clearMessage();
 
-      const email = document.getElementById("email").value.trim();
+      const email = emailInput.value.trim();
       const password = document.getElementById("password").value;
       const currentLang = localStorage.getItem("siteLanguage") || "en";
       const captcha = grecaptcha.getResponse();
@@ -500,10 +520,10 @@
       }
 
       loginBtn.disabled = true;
-      loginBtn.textContent = currentLang === "ar" ? "جاري الدخول..." : "Logging in...";
+      loginBtn.textContent = content[currentLang].loggingIn;
 
       try {
-        const response = await fetch("http://localhost:5050/login", {
+        const response = await fetch("/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -514,6 +534,7 @@
         const data = await response.json();
 
         if (data.success) {
+          handleRememberMe(email);
           localStorage.setItem("loggedInUser", JSON.stringify(data.user));
           window.location.href = "appointment.html";
         } else {
@@ -521,7 +542,7 @@
           grecaptcha.reset();
         }
       } catch (error) {
-        console.error(error);
+        console.error("Login error:", error);
         showMessage(content[currentLang].connectionError, "error");
         grecaptcha.reset();
       } finally {
@@ -532,6 +553,7 @@
 
     const savedLanguage = localStorage.getItem("siteLanguage") || "en";
     applyLanguage(savedLanguage);
+    loadRememberedEmail();
   </script>
 </body>
 </html>

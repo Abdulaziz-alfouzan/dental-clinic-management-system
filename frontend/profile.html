@@ -360,102 +360,100 @@
       transform: none;
     }
 
- body.rtl {
-  direction: rtl;
-}
+    body.rtl {
+      direction: rtl;
+    }
 
-body.rtl .topbar {
-  flex-direction: row-reverse;
-}
+    body.rtl .topbar {
+      flex-direction: row-reverse;
+    }
 
-body.rtl .logo-box {
-  flex-direction: row-reverse;
-}
+    body.rtl .logo-box {
+      flex-direction: row-reverse;
+    }
 
-body.rtl .logo-text {
-  text-align: right;
-}
+    body.rtl .logo-text {
+      text-align: right;
+    }
 
-body.rtl .header-right {
-  flex-direction: row-reverse;
-}
+    body.rtl .header-right {
+      flex-direction: row-reverse;
+    }
 
-body.rtl .user-box {
-  text-align: left;
-}
+    body.rtl .user-box {
+      text-align: left;
+    }
 
-body.rtl .field label {
-  text-align: right;
-}
+    body.rtl .field label {
+      text-align: right;
+    }
 
-body.rtl .field input,
-body.rtl .field textarea {
-  text-align: right;
-}
+    body.rtl .field input,
+    body.rtl .field textarea {
+      text-align: right;
+    }
 
-body.rtl .section-title {
-  text-align: right;
-}
+    body.rtl .section-title {
+      text-align: right;
+    }
 
-body.rtl .nav-link:hover {
-  transform: translateX(-2px);
-}
+    body.rtl .nav-link:hover {
+      transform: translateX(-2px);
+    }
 
-@media (max-width: 930px) {
-  .layout {
-    flex-direction: column;
-  }
+    @media (max-width: 930px) {
+      .layout {
+        flex-direction: column;
+      }
 
-  .sidebar {
-    width: 100%;
-  }
+      .sidebar {
+        width: 100%;
+      }
 
-  .profile-card {
-    flex-direction: column;
-    align-items: center;
-  }
+      .profile-card {
+        flex-direction: column;
+        align-items: center;
+      }
 
-  .form-side {
-    width: 100%;
-    max-width: 100%;
-  }
- 
-}
+      .form-side {
+        width: 100%;
+        max-width: 100%;
+      }
+    }
 
-@media (max-width: 760px) {
-  .page-shell {
-    padding: 0 12px 18px;
-  }
+    @media (max-width: 760px) {
+      .page-shell {
+        padding: 0 12px 18px;
+      }
 
-  .topbar {
-    padding: 18px 16px;
-    gap: 14px;
-    flex-direction: column;
-    align-items: stretch;
-  }
+      .topbar {
+        padding: 18px 16px;
+        gap: 14px;
+        flex-direction: column;
+        align-items: stretch;
+      }
 
-  body.rtl .topbar {
-    flex-direction: column;
-  }
+      body.rtl .topbar {
+        flex-direction: column;
+      }
 
-  .logo-box {
-    min-width: unset;
-    width: 100%;
-  }
+      .logo-box {
+        min-width: unset;
+        width: 100%;
+      }
 
-  .header-right {
-    justify-content: space-between;
-  }
+      .header-right {
+        justify-content: space-between;
+      }
 
-  .page-title {
-    font-size: 30px;
-  }
+      .page-title {
+        font-size: 30px;
+      }
 
-  .content {
-    padding: 22px 18px;
-  }
-}
-
+      .content {
+        padding: 22px 18px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -556,286 +554,290 @@ body.rtl .nav-link:hover {
   </div>
 
   <script>
-const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
 
-if (!loggedInUser) {
-  window.location.href = "login.html";
-}
-
-const userNameBox = document.getElementById("userNameBox");
-const logoutBtn = document.getElementById("logoutBtn");
-const profileForm = document.getElementById("profileForm");
-const messageBox = document.getElementById("messageBox");
-const saveBtn = document.getElementById("saveBtn");
-const enBtn = document.getElementById("enBtn");
-const arBtn = document.getElementById("arBtn");
-const uploadBtn = document.getElementById("uploadBtn");
-const photoInput = document.getElementById("photoInput");
-const avatarCircle = document.getElementById("avatarCircle");
-
-const fullNameInput = document.getElementById("fullName");
-const emailInput = document.getElementById("email");
-const phoneInput = document.getElementById("phone");
-const birthDateInput = document.getElementById("birthDate");
-const addressInput = document.getElementById("address");
-const emergencyContactInput = document.getElementById("emergencyContact");
-const medicalNotesInput = document.getElementById("medicalNotes");
-
-const content = {
-  en: {
-    htmlLang: "en",
-    dir: "ltr",
-    title: "Profile",
-    logoTitle: "SoftwareDoctors",
-    logoSubtitle: "Dental Clinic Management System",
-    pageTitle: "Profile",
-    navDashboard: "☷ Dashboard",
-    navAppointment: "🗓 Booking Appointment",
-    navPrescriptions: "💊 Prescriptions",
-    navProfile: "👤 Profile",
-    navHelp: "❓ Help & Support",
-    navLogout: "⇦ Logout",
-    sectionTitle: "My Profile",
-    uploadBtn: "📷 Upload Photo",
-    fullNameLabel: "Full Name",
-    emailLabel: "Email",
-    phoneLabel: "Phone",
-    birthDateLabel: "Date of Birth",
-    addressLabel: "Address",
-    emergencyContactLabel: "Emergency Contact",
-    medicalNotesLabel: "Medical Notes",
-    saveBtn: "Save Changes",
-    loadingText: "Saving...",
-    successMessage: "Profile updated successfully",
-    updateFailed: "Update failed",
-    serverError: "Server error",
-    loadFailed: "Failed to load profile",
-    noFileSelected: "Please choose an image",
-    invalidImageType: "Please choose a valid image file",
-    imageTooLarge: "Image size must be less than 2 MB",
-    photoUpdated: "Photo updated successfully"
-  },
-  ar: {
-    htmlLang: "ar",
-    dir: "rtl",
-    title: "الملف الشخصي",
-    logoTitle: "SoftwareDoctors",
-    logoSubtitle: "نظام إدارة عيادة الأسنان",
-    pageTitle: "الملف الشخصي",
-    navDashboard: "☷ لوحة التحكم",
-    navAppointment: "🗓 حجز موعد",
-    navPrescriptions: "💊 الوصفات الطبية",
-    navProfile: "👤 الملف الشخصي",
-    navHelp: "❓ المساعدة والدعم",
-    navLogout: "⇦ تسجيل الخروج",
-    sectionTitle: "ملفي الشخصي",
-    uploadBtn: "📷 رفع صورة",
-    fullNameLabel: "الاسم الكامل",
-    emailLabel: "البريد الإلكتروني",
-    phoneLabel: "رقم الهاتف",
-    birthDateLabel: "تاريخ الميلاد",
-    addressLabel: "العنوان",
-    emergencyContactLabel: "جهة اتصال للطوارئ",
-    medicalNotesLabel: "ملاحظات طبية",
-    saveBtn: "حفظ التغييرات",
-    loadingText: "جاري الحفظ...",
-    successMessage: "تم تحديث الملف الشخصي بنجاح",
-    updateFailed: "فشل التحديث",
-    serverError: "خطأ في الخادم",
-    loadFailed: "فشل في تحميل الملف الشخصي",
-    noFileSelected: "الرجاء اختيار صورة",
-    invalidImageType: "الرجاء اختيار ملف صورة صحيح",
-    imageTooLarge: "حجم الصورة يجب أن يكون أقل من 2 ميجابايت",
-    photoUpdated: "تم تحديث الصورة بنجاح"
-  }
-};
-
-function showMessage(message, type = "error") {
-  messageBox.textContent = message;
-  messageBox.className = `message-box show ${type}`;
-}
-
-function clearMessage() {
-  messageBox.textContent = "";
-  messageBox.className = "message-box";
-}
-
-function applyLanguage(lang) {
-  const selected = content[lang];
-  const currentUser = JSON.parse(localStorage.getItem("loggedInUser")) || loggedInUser;
-
-  document.documentElement.lang = selected.htmlLang;
-  document.documentElement.dir = selected.dir;
-  document.body.classList.toggle("rtl", lang === "ar");
-  document.title = selected.title;
-
-  document.getElementById("logoTitle").textContent = selected.logoTitle;
-  document.getElementById("logoSubtitle").textContent = selected.logoSubtitle;
-  document.getElementById("pageTitle").textContent = selected.pageTitle;
-  document.getElementById("navDashboard").textContent = selected.navDashboard;
-  document.getElementById("navAppointment").textContent = selected.navAppointment;
-  document.getElementById("navPrescriptions").textContent = selected.navPrescriptions;
-  document.getElementById("navProfile").textContent = selected.navProfile;
-  document.getElementById("navHelp").textContent = selected.navHelp;
-  document.getElementById("logoutBtn").textContent = selected.navLogout;
-  document.getElementById("sectionTitle").textContent = selected.sectionTitle;
-  document.getElementById("uploadBtn").textContent = selected.uploadBtn;
-  document.getElementById("fullNameLabel").textContent = selected.fullNameLabel;
-  document.getElementById("emailLabel").textContent = selected.emailLabel;
-  document.getElementById("phoneLabel").textContent = selected.phoneLabel;
-  document.getElementById("birthDateLabel").textContent = selected.birthDateLabel;
-  document.getElementById("addressLabel").textContent = selected.addressLabel;
-  document.getElementById("emergencyContactLabel").textContent = selected.emergencyContactLabel;
-  document.getElementById("medicalNotesLabel").textContent = selected.medicalNotesLabel;
-
-  saveBtn.textContent = selected.saveBtn;
-  userNameBox.textContent = currentUser.full_name || "Patient";
-
-  enBtn.classList.toggle("active", lang === "en");
-  arBtn.classList.toggle("active", lang === "ar");
-
-  localStorage.setItem("siteLanguage", lang);
-}
-
-/* =========================
-   LOAD PROFILE
-========================= */
-async function loadProfile() {
-  try {
-    const res = await fetch(`http://localhost:5050/my-patient/${loggedInUser.user_id}`);
-    const data = await res.json();
-
-    if (!data.success) throw new Error();
-
-    fullNameInput.value = loggedInUser.full_name || "";
-    emailInput.value = loggedInUser.email || "";
-    phoneInput.value = data.patient.phone || "";
-    birthDateInput.value = data.patient.birth_date || "";
-    addressInput.value = data.patient.address || "";
-    emergencyContactInput.value = data.patient.emergency_contact || "";
-    medicalNotesInput.value = data.patient.medical_notes || "";
-
-    // ✅ صورة من الداتابيس
-    if (data.patient.profile_image) {
-      avatarCircle.innerHTML = `<img src="${data.patient.profile_image}">`;
-    } else {
-      avatarCircle.textContent = "👤";
+    if (!loggedInUser) {
+      window.location.href = "login.html";
     }
 
-  } catch (err) {
-    showMessage(content[localStorage.getItem("siteLanguage") || "en"].loadFailed);
-  }
-}
+    const userNameBox = document.getElementById("userNameBox");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const profileForm = document.getElementById("profileForm");
+    const messageBox = document.getElementById("messageBox");
+    const saveBtn = document.getElementById("saveBtn");
+    const enBtn = document.getElementById("enBtn");
+    const arBtn = document.getElementById("arBtn");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const photoInput = document.getElementById("photoInput");
+    const avatarCircle = document.getElementById("avatarCircle");
 
-/* =========================
-   UPLOAD PHOTO
-========================= */
-async function handlePhotoUpload(file) {
-  const lang = localStorage.getItem("siteLanguage") || "en";
+    const fullNameInput = document.getElementById("fullName");
+    const emailInput = document.getElementById("email");
+    const phoneInput = document.getElementById("phone");
+    const birthDateInput = document.getElementById("birthDate");
+    const addressInput = document.getElementById("address");
+    const emergencyContactInput = document.getElementById("emergencyContact");
+    const medicalNotesInput = document.getElementById("medicalNotes");
 
-  if (!file) return showMessage(content[lang].noFileSelected);
-  if (!file.type.startsWith("image/")) return showMessage(content[lang].invalidImageType);
-  if (file.size > 2 * 1024 * 1024) return showMessage(content[lang].imageTooLarge);
+    const content = {
+      en: {
+        htmlLang: "en",
+        dir: "ltr",
+        title: "Profile",
+        logoTitle: "SoftwareDoctors",
+        logoSubtitle: "Dental Clinic Management System",
+        pageTitle: "Profile",
+        navDashboard: "☷ Dashboard",
+        navAppointment: "🗓 Booking Appointment",
+        navPrescriptions: "💊 Prescriptions",
+        navProfile: "👤 Profile",
+        navHelp: "❓ Help & Support",
+        navLogout: "⇦ Logout",
+        sectionTitle: "My Profile",
+        uploadBtn: "📷 Upload Photo",
+        fullNameLabel: "Full Name",
+        emailLabel: "Email",
+        phoneLabel: "Phone",
+        birthDateLabel: "Date of Birth",
+        addressLabel: "Address",
+        emergencyContactLabel: "Emergency Contact",
+        medicalNotesLabel: "Medical Notes",
+        saveBtn: "Save Changes",
+        loadingText: "Saving...",
+        successMessage: "Profile updated successfully",
+        updateFailed: "Update failed",
+        serverError: "Server error",
+        loadFailed: "Failed to load profile",
+        noFileSelected: "Please choose an image",
+        invalidImageType: "Please choose a valid image file",
+        imageTooLarge: "Image size must be less than 2 MB",
+        photoUpdated: "Photo updated successfully"
+      },
+      ar: {
+        htmlLang: "ar",
+        dir: "rtl",
+        title: "الملف الشخصي",
+        logoTitle: "SoftwareDoctors",
+        logoSubtitle: "نظام إدارة عيادة الأسنان",
+        pageTitle: "الملف الشخصي",
+        navDashboard: "☷ لوحة التحكم",
+        navAppointment: "🗓 حجز موعد",
+        navPrescriptions: "💊 الوصفات الطبية",
+        navProfile: "👤 الملف الشخصي",
+        navHelp: "❓ المساعدة والدعم",
+        navLogout: "⇦ تسجيل الخروج",
+        sectionTitle: "ملفي الشخصي",
+        uploadBtn: "📷 رفع صورة",
+        fullNameLabel: "الاسم الكامل",
+        emailLabel: "البريد الإلكتروني",
+        phoneLabel: "رقم الهاتف",
+        birthDateLabel: "تاريخ الميلاد",
+        addressLabel: "العنوان",
+        emergencyContactLabel: "جهة اتصال للطوارئ",
+        medicalNotesLabel: "ملاحظات طبية",
+        saveBtn: "حفظ التغييرات",
+        loadingText: "جاري الحفظ...",
+        successMessage: "تم تحديث الملف الشخصي بنجاح",
+        updateFailed: "فشل التحديث",
+        serverError: "خطأ في الخادم",
+        loadFailed: "فشل في تحميل الملف الشخصي",
+        noFileSelected: "الرجاء اختيار صورة",
+        invalidImageType: "الرجاء اختيار ملف صورة صحيح",
+        imageTooLarge: "حجم الصورة يجب أن يكون أقل من 2 ميجابايت",
+        photoUpdated: "تم تحديث الصورة بنجاح"
+      }
+    };
 
-  const reader = new FileReader();
+    function showMessage(message, type = "error") {
+      messageBox.textContent = message;
+      messageBox.className = `message-box show ${type}`;
+    }
 
-  reader.onload = async (e) => {
-    const image = e.target.result;
+    function clearMessage() {
+      messageBox.textContent = "";
+      messageBox.className = "message-box";
+    }
 
-    avatarCircle.innerHTML = `<img src="${image}">`;
+    function applyLanguage(lang) {
+      const selected = content[lang];
+      const currentUser = JSON.parse(localStorage.getItem("loggedInUser")) || loggedInUser;
 
-    try {
-      const res = await fetch(`http://localhost:5050/profile-image/${loggedInUser.user_id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ profile_image: image })
-      });
+      document.documentElement.lang = selected.htmlLang;
+      document.documentElement.dir = selected.dir;
+      document.body.classList.toggle("rtl", lang === "ar");
+      document.title = selected.title;
 
-      const data = await res.json();
+      document.getElementById("logoTitle").textContent = selected.logoTitle;
+      document.getElementById("logoSubtitle").textContent = selected.logoSubtitle;
+      document.getElementById("pageTitle").textContent = selected.pageTitle;
+      document.getElementById("navDashboard").textContent = selected.navDashboard;
+      document.getElementById("navAppointment").textContent = selected.navAppointment;
+      document.getElementById("navPrescriptions").textContent = selected.navPrescriptions;
+      document.getElementById("navProfile").textContent = selected.navProfile;
+      document.getElementById("navHelp").textContent = selected.navHelp;
+      document.getElementById("logoutBtn").textContent = selected.navLogout;
+      document.getElementById("sectionTitle").textContent = selected.sectionTitle;
+      document.getElementById("uploadBtn").textContent = selected.uploadBtn;
+      document.getElementById("fullNameLabel").textContent = selected.fullNameLabel;
+      document.getElementById("emailLabel").textContent = selected.emailLabel;
+      document.getElementById("phoneLabel").textContent = selected.phoneLabel;
+      document.getElementById("birthDateLabel").textContent = selected.birthDateLabel;
+      document.getElementById("addressLabel").textContent = selected.addressLabel;
+      document.getElementById("emergencyContactLabel").textContent = selected.emergencyContactLabel;
+      document.getElementById("medicalNotesLabel").textContent = selected.medicalNotesLabel;
 
-      if (data.success) {
-        showMessage(content[lang].photoUpdated, "success");
-      } else {
-        showMessage(data.message);
+      saveBtn.textContent = selected.saveBtn;
+      userNameBox.textContent = currentUser.full_name || "Patient";
+
+      enBtn.classList.toggle("active", lang === "en");
+      arBtn.classList.toggle("active", lang === "ar");
+
+      localStorage.setItem("siteLanguage", lang);
+    }
+
+    async function loadProfile() {
+      try {
+        const res = await fetch(`/my-patient/${loggedInUser.user_id}`);
+        const data = await res.json();
+
+        if (!data.success) {
+          throw new Error("Failed to load profile");
+        }
+
+        const currentUser = JSON.parse(localStorage.getItem("loggedInUser")) || loggedInUser;
+
+        fullNameInput.value = currentUser.full_name || "";
+        emailInput.value = currentUser.email || "";
+        phoneInput.value = data.patient.phone || "";
+        birthDateInput.value = data.patient.birth_date ? data.patient.birth_date.split("T")[0] : "";
+        addressInput.value = data.patient.address || "";
+        emergencyContactInput.value = data.patient.emergency_contact || "";
+        medicalNotesInput.value = data.patient.medical_notes || "";
+
+        if (data.patient.profile_image) {
+          avatarCircle.innerHTML = `<img src="${data.patient.profile_image}" alt="Profile Photo">`;
+        } else {
+          avatarCircle.textContent = "👤";
+        }
+      } catch (err) {
+        console.error("Load profile error:", err);
+        showMessage(content[localStorage.getItem("siteLanguage") || "en"].loadFailed, "error");
+      }
+    }
+
+    async function handlePhotoUpload(file) {
+      const lang = localStorage.getItem("siteLanguage") || "en";
+
+      if (!file) {
+        showMessage(content[lang].noFileSelected, "error");
+        return;
       }
 
-    } catch {
-      showMessage(content[lang].serverError);
+      if (!file.type.startsWith("image/")) {
+        showMessage(content[lang].invalidImageType, "error");
+        return;
+      }
+
+      if (file.size > 2 * 1024 * 1024) {
+        showMessage(content[lang].imageTooLarge, "error");
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = async (e) => {
+        const image = e.target.result;
+
+        avatarCircle.innerHTML = `<img src="${image}" alt="Profile Photo">`;
+
+        try {
+          const res = await fetch(`/profile-image/${loggedInUser.user_id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ profile_image: image })
+          });
+
+          const data = await res.json();
+
+          if (data.success) {
+            showMessage(content[lang].photoUpdated, "success");
+          } else {
+            showMessage(data.message || content[lang].updateFailed, "error");
+          }
+        } catch (error) {
+          console.error("Photo upload error:", error);
+          showMessage(content[lang].serverError, "error");
+        }
+      };
+
+      reader.readAsDataURL(file);
     }
-  };
 
-  reader.readAsDataURL(file);
-}
+    profileForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearMessage();
 
-/* =========================
-   UPDATE PROFILE
-========================= */
-profileForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  clearMessage();
+      const lang = localStorage.getItem("siteLanguage") || "en";
 
-  const lang = localStorage.getItem("siteLanguage") || "en";
+      saveBtn.disabled = true;
+      saveBtn.textContent = content[lang].loadingText;
 
-  saveBtn.disabled = true;
-  saveBtn.textContent = content[lang].loadingText;
+      try {
+        const res = await fetch(`/profile/${loggedInUser.user_id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            full_name: fullNameInput.value.trim(),
+            phone: phoneInput.value.trim(),
+            birth_date: birthDateInput.value || null,
+            address: addressInput.value.trim(),
+            emergency_contact: emergencyContactInput.value.trim(),
+            medical_notes: medicalNotesInput.value.trim()
+          })
+        });
 
-  try {
-    const res = await fetch(`http://localhost:5050/profile/${loggedInUser.user_id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-  full_name: fullNameInput.value.trim(),
-  phone: phoneInput.value.trim(),
-  birth_date: birthDateInput.value || null,
-  address: addressInput.value.trim(),
-  emergency_contact: emergencyContactInput.value.trim(),
-  medical_notes: medicalNotesInput.value.trim()
-})
+        const data = await res.json();
+
+        if (data.success) {
+          const updatedUser = {
+            ...loggedInUser,
+            full_name: fullNameInput.value.trim()
+          };
+
+          localStorage.setItem("loggedInUser", JSON.stringify(updatedUser));
+          userNameBox.textContent = fullNameInput.value.trim();
+          showMessage(content[lang].successMessage, "success");
+        } else {
+          showMessage(data.message || content[lang].updateFailed, "error");
+        }
+      } catch (error) {
+        console.error("Profile update error:", error);
+        showMessage(content[lang].serverError, "error");
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = content[lang].saveBtn;
+      }
     });
 
-    const data = await res.json();
+    uploadBtn.onclick = () => photoInput.click();
+    photoInput.onchange = () => handlePhotoUpload(photoInput.files[0]);
 
-    if (data.success) {
-      localStorage.setItem("loggedInUser", JSON.stringify({
-        ...loggedInUser,
-        full_name: fullNameInput.value.trim()
-      }));
+    logoutBtn.onclick = (e) => {
+      e.preventDefault();
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "home.html";
+    };
 
-      userNameBox.textContent = fullNameInput.value;
-      showMessage(content[lang].successMessage, "success");
-    } else {
-      showMessage(data.message);
-    }
+    enBtn.onclick = () => applyLanguage("en");
+    arBtn.onclick = () => applyLanguage("ar");
 
-  } catch {
-    showMessage(content[lang].serverError);
-  }
-
-  saveBtn.disabled = false;
-  saveBtn.textContent = content[lang].saveBtn;
-});
-
-/* =========================
-   EVENTS
-========================= */
-uploadBtn.onclick = () => photoInput.click();
-photoInput.onchange = () => handlePhotoUpload(photoInput.files[0]);
-
-logoutBtn.onclick = () => {
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "home.html";
-};
-
-enBtn.onclick = () => applyLanguage("en");
-arBtn.onclick = () => applyLanguage("ar");
-
-/* =========================
-   INIT
-========================= */
-const lang = localStorage.getItem("siteLanguage") || "en";
-applyLanguage(lang);
-loadProfile();
-</script>
-
+    const lang = localStorage.getItem("siteLanguage") || "en";
+    applyLanguage(lang);
+    loadProfile();
+  </script>
 </body>
 </html>

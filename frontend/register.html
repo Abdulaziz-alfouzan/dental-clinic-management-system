@@ -511,7 +511,7 @@
       registerBtn.textContent = content[currentLang].loadingText;
 
       try {
-        const response = await fetch("http://localhost:5050/register", {
+        constresponse = await  fetch(`${window.location.origin}/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

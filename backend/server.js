@@ -7,10 +7,22 @@ const pool = require("./db");
 
 const app = express();
 
-app.use(cors());
-app.use(express.json({ limit: "10mb" }));
+const PORT = process.env.PORT || 5050;
+const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY;
 
-const RECAPTCHA_SECRET_KEY = "6LdIJK0sAAAAADxMqLvwTT8HJXJCUwjTHds27FI6";
+/* =========================
+   MIDDLEWARE
+========================= */
+
+app.use(
+  cors({
+    origin: true,
+    credentials: true
+  })
+);
+
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true }));
 
 /* =========================
    HELPER FUNCTIONS
@@ -29,6 +41,17 @@ function isValidDate(date) {
 }
 
 /* =========================
+   HEALTH CHECK
+========================= */
+
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Server is running"
+  });
+});
+
+/* =========================
    GET ROUTES
 ========================= */
 
@@ -44,7 +67,10 @@ app.get("/patients", async (req, res) => {
     res.json(result.rows);
   } catch (err) {
     console.error("GET /patients error:", err.message);
-    res.status(500).json({ success: false, message: "Failed to load patients" });
+    res.status(500).json({
+      success: false,
+      message: "Failed to load patients"
+    });
   }
 });
 
@@ -68,7 +94,10 @@ app.get("/doctors", async (req, res) => {
     res.json(result.rows);
   } catch (err) {
     console.error("GET /doctors error:", err.message);
-    res.status(500).json({ success: false, message: "Failed to load doctors" });
+    res.status(500).json({
+      success: false,
+      message: "Failed to load doctors"
+    });
   }
 });
 
@@ -84,7 +113,10 @@ app.get("/appointments", async (req, res) => {
     res.json(result.rows);
   } catch (err) {
     console.error("GET /appointments error:", err.message);
-    res.status(500).json({ success: false, message: "Failed to load appointments" });
+    res.status(500).json({
+      success: false,
+      message: "Failed to load appointments"
+    });
   }
 });
 
@@ -100,7 +132,10 @@ app.get("/prescriptions", async (req, res) => {
     res.json(result.rows);
   } catch (err) {
     console.error("GET /prescriptions error:", err.message);
-    res.status(500).json({ success: false, message: "Failed to load prescriptions" });
+    res.status(500).json({
+      success: false,
+      message: "Failed to load prescriptions"
+    });
   }
 });
 
@@ -109,11 +144,14 @@ app.get("/my-patient/:userId", async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const result = await pool.query(`
+    const result = await pool.query(
+      `
       SELECT *
       FROM "Dental_Clinic_Management_System"."patients"
       WHERE user_id = $1
-    `, [userId]);
+      `,
+      [userId]
+    );
 
     if (result.rows.length === 0) {
       return res.status(404).json({
@@ -128,7 +166,10 @@ app.get("/my-patient/:userId", async (req, res) => {
     });
   } catch (err) {
     console.error("GET /my-patient/:userId error:", err.message);
-    res.status(500).json({ success: false, message: "Failed to load patient profile" });
+    res.status(500).json({
+      success: false,
+      message: "Failed to load patient profile"
+    });
   }
 });
 
@@ -173,14 +214,14 @@ app.post("/register", async (req, res) => {
       });
     }
 
-const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
-if (!passwordRegex.test(password)) {
-  return res.status(400).json({
-    success: false,
-    message: "Password must be at least 8 characters and include uppercase and number"
-  });
-}
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 8 characters and include uppercase and number"
+      });
+    }
 
     if (password.includes(" ")) {
       return res.status(400).json({
@@ -212,11 +253,14 @@ if (!passwordRegex.test(password)) {
 
     await client.query("BEGIN");
 
-    const existingUser = await client.query(`
+    const existingUser = await client.query(
+      `
       SELECT user_id
       FROM "Dental_Clinic_Management_System"."users"
       WHERE LOWER(email) = LOWER($1)
-    `, [email.trim()]);
+      `,
+      [email.trim()]
+    );
 
     if (existingUser.rows.length > 0) {
       await client.query("ROLLBACK");
@@ -228,28 +272,34 @@ if (!passwordRegex.test(password)) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = await client.query(`
+    const newUser = await client.query(
+      `
       INSERT INTO "Dental_Clinic_Management_System"."users"
       (full_name, email, password_hash, role)
       VALUES ($1, $2, $3, $4)
       RETURNING user_id, full_name, email, role
-    `, [full_name.trim(), email.trim(), hashedPassword, "Patient"]);
+      `,
+      [full_name.trim(), email.trim(), hashedPassword, "Patient"]
+    );
 
     const user_id = newUser.rows[0].user_id;
 
-    const newPatient = await client.query(`
+    const newPatient = await client.query(
+      `
       INSERT INTO "Dental_Clinic_Management_System"."patients"
       (user_id, phone, birth_date, address, emergency_contact, medical_notes)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *
-    `, [
-      user_id,
-      phone ? phone.trim() : null,
-      birth_date || null,
-      address ? address.trim() : null,
-      emergency_contact ? emergency_contact.trim() : null,
-      medical_notes ? medical_notes.trim() : null
-    ]);
+      `,
+      [
+        user_id,
+        phone ? phone.trim() : null,
+        birth_date || null,
+        address ? address.trim() : null,
+        emergency_contact ? emergency_contact.trim() : null,
+        medical_notes ? medical_notes.trim() : null
+      ]
+    );
 
     await client.query("COMMIT");
 
@@ -300,6 +350,16 @@ app.post("/login", async (req, res) => {
       });
     }
 
+    if (
+      !RECAPTCHA_SECRET_KEY ||
+      RECAPTCHA_SECRET_KEY === "PUT_YOUR_RECAPTCHA_SECRET_KEY_HERE"
+    ) {
+      return res.status(500).json({
+        success: false,
+        message: "reCAPTCHA secret key is not configured"
+      });
+    }
+
     const captchaVerify = await axios.post(
       "https://www.google.com/recaptcha/api/siteverify",
       null,
@@ -318,11 +378,14 @@ app.post("/login", async (req, res) => {
       });
     }
 
-    const result = await pool.query(`
+    const result = await pool.query(
+      `
       SELECT user_id, full_name, email, role, is_active, password_hash
       FROM "Dental_Clinic_Management_System"."users"
       WHERE LOWER(email) = LOWER($1)
-    `, [email.trim()]);
+      `,
+      [email.trim()]
+    );
 
     if (result.rows.length === 0) {
       return res.status(401).json({
@@ -414,7 +477,6 @@ app.post("/appointments", async (req, res) => {
 
     const finalStatus = status || "Upcoming";
 
-    // CHECK double booking first
     const existingAppointment = await pool.query(
       `
       SELECT appointment_id
@@ -473,8 +535,6 @@ app.post("/appointments", async (req, res) => {
     });
   }
 });
-
-
 
 // CANCEL appointment
 app.put("/appointments/:id/cancel", async (req, res) => {
@@ -543,7 +603,6 @@ app.put("/appointments/:id/cancel", async (req, res) => {
     });
   }
 });
-
 
 // RESCHEDULE appointment
 app.put("/appointments/:id/reschedule", async (req, res) => {
@@ -706,10 +765,12 @@ app.put("/profile/:userId", async (req, res) => {
     await client.query("BEGIN");
 
     const userResult = await client.query(
-      `UPDATE "Dental_Clinic_Management_System"."users"
-       SET full_name = $1
-       WHERE user_id = $2
-       RETURNING user_id`,
+      `
+      UPDATE "Dental_Clinic_Management_System"."users"
+      SET full_name = $1
+      WHERE user_id = $2
+      RETURNING user_id
+      `,
       [full_name.trim(), userId]
     );
 
@@ -722,14 +783,16 @@ app.put("/profile/:userId", async (req, res) => {
     }
 
     const patientResult = await client.query(
-      `UPDATE "Dental_Clinic_Management_System"."patients"
-       SET phone = $1,
-           birth_date = $2,
-           address = $3,
-           emergency_contact = $4,
-           medical_notes = $5
-       WHERE user_id = $6
-       RETURNING user_id`,
+      `
+      UPDATE "Dental_Clinic_Management_System"."patients"
+      SET phone = $1,
+          birth_date = $2,
+          address = $3,
+          emergency_contact = $4,
+          medical_notes = $5
+      WHERE user_id = $6
+      RETURNING user_id
+      `,
       [
         phone ? phone.trim() : null,
         birth_date || null,
@@ -757,7 +820,6 @@ app.put("/profile/:userId", async (req, res) => {
   } catch (err) {
     await client.query("ROLLBACK");
     console.error("PUT /profile/:userId error:", err.message);
-
     res.status(500).json({
       success: false,
       message: "Server error while updating profile"
@@ -766,7 +828,7 @@ app.put("/profile/:userId", async (req, res) => {
     client.release();
   }
 });
-  
+
 /* =========================
    PROFILE IMAGE UPDATE
 ========================= */
@@ -788,14 +850,15 @@ app.put("/profile-image/:userId", async (req, res) => {
     await client.query("BEGIN");
 
     const result = await client.query(
-      `UPDATE "Dental_Clinic_Management_System"."patients"
-       SET profile_image = $1
-       WHERE user_id = $2
-       RETURNING user_id`,
+      `
+      UPDATE "Dental_Clinic_Management_System"."patients"
+      SET profile_image = $1
+      WHERE user_id = $2
+      RETURNING user_id
+      `,
       [profile_image, userId]
     );
 
-    // 🔥 أهم تعديل
     if (result.rowCount === 0) {
       await client.query("ROLLBACK");
       return res.status(404).json({
@@ -810,11 +873,9 @@ app.put("/profile-image/:userId", async (req, res) => {
       success: true,
       message: "Profile image updated successfully"
     });
-
   } catch (err) {
     await client.query("ROLLBACK");
-    console.error("PUT /profile-image error:", err.message);
-
+    console.error("PUT /profile-image/:userId error:", err.message);
     res.status(500).json({
       success: false,
       message: "Server error while updating image"
@@ -824,9 +885,9 @@ app.put("/profile-image/:userId", async (req, res) => {
   }
 });
 
-// ================================
-// SERVE FRONTEND
-// ================================
+/* =========================
+   SERVE FRONTEND
+========================= */
 
 app.use(express.static(path.join(__dirname, "../frontend")));
 
@@ -834,12 +895,9 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend", "home.html"));
 });
 
-
-// ================================
-// START SERVER
-// ================================
-
-const PORT = process.env.PORT || 5050;
+/* =========================
+   START SERVER
+========================= */
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

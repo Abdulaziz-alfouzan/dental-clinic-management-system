@@ -518,46 +518,46 @@
       flex-wrap: wrap;
     }
 
-   body.rtl {
-  direction: rtl;
-}
+    body.rtl {
+      direction: rtl;
+    }
 
-body.rtl .topbar {
-  flex-direction: row-reverse;
-}
+    body.rtl .topbar {
+      flex-direction: row-reverse;
+    }
 
-body.rtl .logo-box {
-  flex-direction: row-reverse;
-}
+    body.rtl .logo-box {
+      flex-direction: row-reverse;
+    }
 
-body.rtl .logo-text {
-  text-align: right;
-}
+    body.rtl .logo-text {
+      text-align: right;
+    }
 
-body.rtl .header-right {
-  flex-direction: row-reverse;
-}
+    body.rtl .header-right {
+      flex-direction: row-reverse;
+    }
 
-body.rtl .user-box {
-  text-align: left;
-}
+    body.rtl .user-box {
+      text-align: left;
+    }
 
-body.rtl .field label {
-  text-align: right;
-}
+    body.rtl .field label {
+      text-align: right;
+    }
 
-body.rtl .field input,
-body.rtl .field textarea {
-  text-align: right;
-}
+    body.rtl .field input,
+    body.rtl .field textarea {
+      text-align: right;
+    }
 
-body.rtl .section-title {
-  text-align: right;
-}
+    body.rtl .section-title {
+      text-align: right;
+    }
 
-body.rtl .nav-link:hover {
-  transform: translateX(-2px);
-}
+    body.rtl .nav-link:hover {
+      transform: translateX(-2px);
+    }
 
     @media (max-width: 1080px) {
       .table-head,
@@ -871,26 +871,15 @@ body.rtl .nav-link:hover {
     }
 
     function translateAppointmentStatus(rawStatus, lang) {
-      if (lang === "ar") {
-        if (rawStatus === "Upcoming") return content[lang].upcoming;
-        if (rawStatus === "Completed") return content[lang].completed;
-        if (rawStatus === "Cancelled") return content[lang].cancelled;
-      } else {
-        if (rawStatus === "Upcoming") return content[lang].upcoming;
-        if (rawStatus === "Completed") return content[lang].completed;
-        if (rawStatus === "Cancelled") return content[lang].cancelled;
-      }
+      if (rawStatus === "Upcoming") return content[lang].upcoming;
+      if (rawStatus === "Completed") return content[lang].completed;
+      if (rawStatus === "Cancelled") return content[lang].cancelled;
       return rawStatus;
     }
 
     function translatePrescriptionStatus(rawStatus, lang) {
-      if (lang === "ar") {
-        if (rawStatus === "Pending") return content[lang].pendingStatus;
-        if (rawStatus === "Approved") return content[lang].approved;
-      } else {
-        if (rawStatus === "Pending") return content[lang].pendingStatus;
-        if (rawStatus === "Approved") return content[lang].approved;
-      }
+      if (rawStatus === "Pending") return content[lang].pendingStatus;
+      if (rawStatus === "Approved") return content[lang].approved;
       return rawStatus;
     }
 
@@ -922,6 +911,16 @@ body.rtl .nav-link:hover {
       document.getElementById("pHeadStatus").textContent = selected.pHeadStatus;
       document.getElementById("pHeadAction").textContent = selected.pHeadAction;
 
+      const appointmentsLoading = document.getElementById("appointmentsLoading");
+      if (appointmentsLoading) {
+        appointmentsLoading.textContent = selected.appointmentsLoading;
+      }
+
+      const prescriptionsLoading = document.getElementById("prescriptionsLoading");
+      if (prescriptionsLoading) {
+        prescriptionsLoading.textContent = selected.prescriptionsLoading;
+      }
+
       rescheduleTitle.textContent = selected.rescheduleTitle;
       rescheduleDateLabel.textContent = selected.rescheduleDateLabel;
       rescheduleTimeLabel.textContent = selected.rescheduleTimeLabel;
@@ -942,7 +941,7 @@ body.rtl .nav-link:hover {
       selectedRescheduleTime = "";
       rescheduleDateInput.value = "";
 
-      document.querySelectorAll(".time-slot-btn").forEach(btn => {
+      document.querySelectorAll(".time-slot-btn").forEach((btn) => {
         btn.classList.remove("active");
       });
     }
@@ -966,9 +965,9 @@ body.rtl .nav-link:hover {
       resetRescheduleModal();
     }
 
-    document.querySelectorAll(".time-slot-btn").forEach(btn => {
+    document.querySelectorAll(".time-slot-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".time-slot-btn").forEach(item => {
+        document.querySelectorAll(".time-slot-btn").forEach((item) => {
           item.classList.remove("active");
         });
 
@@ -986,7 +985,7 @@ body.rtl .nav-link:hover {
     });
 
     async function loadPatient() {
-      const response = await fetch(`http://localhost:5050/my-patient/${loggedInUser.user_id}`);
+      const response = await fetch(`/my-patient/${loggedInUser.user_id}`);
       const data = await response.json();
 
       if (data.success) {
@@ -997,7 +996,7 @@ body.rtl .nav-link:hover {
     }
 
     async function loadDoctors() {
-      const response = await fetch("http://localhost:5050/doctors");
+      const response = await fetch(`/doctors`);
       const doctors = await response.json();
 
       doctorsMap = {};
@@ -1010,11 +1009,11 @@ body.rtl .nav-link:hover {
       const currentLang = localStorage.getItem("siteLanguage") || "en";
 
       try {
-        const response = await fetch("http://localhost:5050/appointments");
+        const response = await fetch(`/appointments`);
         const appointments = await response.json();
 
         const myAppointments = appointments
-          .filter(app => Number(app.patient_id) === Number(patientData.patient_id))
+          .filter((app) => Number(app.patient_id) === Number(patientData.patient_id))
           .sort((a, b) => {
             if (a.status === "Upcoming" && b.status !== "Upcoming") return -1;
             if (a.status !== "Upcoming" && b.status === "Upcoming") return 1;
@@ -1028,7 +1027,7 @@ body.rtl .nav-link:hover {
           return;
         }
 
-        appointmentsContainer.innerHTML = myAppointments.map(app => {
+        appointmentsContainer.innerHTML = myAppointments.map((app) => {
           const doctor = doctorsMap[app.doctor_id];
           const doctorName = doctor ? doctor.full_name : content[currentLang].doctorFallback;
           const specialization = doctor
@@ -1129,7 +1128,7 @@ body.rtl .nav-link:hover {
       confirmCancelId = null;
 
       try {
-        const response = await fetch(`http://localhost:5050/appointments/${id}/cancel`, {
+        const response = await fetch(`/appointments/${id}/cancel`, {
           method: "PUT"
         });
 
@@ -1164,19 +1163,16 @@ body.rtl .nav-link:hover {
       }
 
       try {
-        const response = await fetch(
-          `http://localhost:5050/appointments/${selectedRescheduleAppointmentId}/reschedule`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              appointment_date: rescheduleDateInput.value,
-              appointment_time: selectedRescheduleTime
-            })
-          }
-        );
+        const response = await fetch(`/appointments/${selectedRescheduleAppointmentId}/reschedule`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            appointment_date: rescheduleDateInput.value,
+            appointment_time: selectedRescheduleTime
+          })
+        });
 
         const data = await response.json();
 
@@ -1199,11 +1195,11 @@ body.rtl .nav-link:hover {
       const currentLang = localStorage.getItem("siteLanguage") || "en";
 
       try {
-        const response = await fetch("http://localhost:5050/prescriptions");
+        const response = await fetch(`/prescriptions`);
         const prescriptions = await response.json();
 
         const myPrescriptions = prescriptions
-          .filter(item => Number(item.patient_id) === Number(patientData.patient_id))
+          .filter((item) => Number(item.patient_id) === Number(patientData.patient_id))
           .slice(0, 2);
 
         if (myPrescriptions.length === 0) {
@@ -1211,7 +1207,7 @@ body.rtl .nav-link:hover {
           return;
         }
 
-        prescriptionsContainer.innerHTML = myPrescriptions.map(item => {
+        prescriptionsContainer.innerHTML = myPrescriptions.map((item) => {
           const doctor = doctorsMap[item.doctor_id];
           const doctorName = doctor ? doctor.full_name : content[currentLang].doctorFallback;
           const doctorSpec = doctor ? (doctor.specialization || "") : "";
@@ -1286,9 +1282,10 @@ body.rtl .nav-link:hover {
         await loadPrescriptions();
       } catch (error) {
         console.error(error);
-        showMessage(content[localStorage.getItem("siteLanguage") || "en"].failedLoad, "error");
-        appointmentsContainer.innerHTML = `<div class="empty-box">${content[localStorage.getItem("siteLanguage") || "en"].failedLoad}</div>`;
-        prescriptionsContainer.innerHTML = `<div class="empty-box">${content[localStorage.getItem("siteLanguage") || "en"].failedLoad}</div>`;
+        const currentLang = localStorage.getItem("siteLanguage") || "en";
+        showMessage(content[currentLang].failedLoad, "error");
+        appointmentsContainer.innerHTML = `<div class="empty-box">${content[currentLang].failedLoad}</div>`;
+        prescriptionsContainer.innerHTML = `<div class="empty-box">${content[currentLang].failedLoad}</div>`;
       }
     }
 

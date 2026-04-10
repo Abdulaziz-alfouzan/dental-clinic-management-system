@@ -373,36 +373,36 @@
     }
 
     body.rtl {
-  direction: rtl;
-}
+      direction: rtl;
+    }
 
-body.rtl .topbar {
-  flex-direction: row-reverse;
-}
+    body.rtl .topbar {
+      flex-direction: row-reverse;
+    }
 
-body.rtl .logo-box {
-  flex-direction: row-reverse;
-}
+    body.rtl .logo-box {
+      flex-direction: row-reverse;
+    }
 
-body.rtl .logo-text {
-  text-align: right;
-}
+    body.rtl .logo-text {
+      text-align: right;
+    }
 
-body.rtl .header-right {
-  flex-direction: row-reverse;
-}
+    body.rtl .header-right {
+      flex-direction: row-reverse;
+    }
 
-body.rtl .user-box {
-  text-align: left;
-}
+    body.rtl .user-box {
+      text-align: left;
+    }
 
-body.rtl .section-title {
-  text-align: right;
-}
+    body.rtl .section-title {
+      text-align: right;
+    }
 
-body.rtl .nav-link:hover {
-  transform: translateX(-2px);
-}
+    body.rtl .nav-link:hover {
+      transform: translateX(-2px);
+    }
 
     @media (max-width: 1080px) {
       .table-head,
@@ -644,24 +644,24 @@ body.rtl .nav-link:hover {
       document.getElementById("headDoctor").textContent = selected.headDoctor;
       document.getElementById("headStatus").textContent = selected.headStatus;
       document.getElementById("headAction").textContent = selected.headAction;
-     
 
-const loadingTextEl = document.getElementById("loadingText");
-if (loadingTextEl) {
-  loadingTextEl.textContent = selected.loadingText;
-}
+      const loadingTextEl = document.getElementById("loadingText");
+      if (loadingTextEl) {
+        loadingTextEl.textContent = selected.loadingText;
+      }
 
-document.getElementById("searchInput").placeholder = selected.searchPlaceholder;
+      document.getElementById("searchInput").placeholder = selected.searchPlaceholder;
 
-userNameBox.textContent = loggedInUser.full_name || "Patient";
+      userNameBox.textContent = loggedInUser.full_name || "Patient";
 
-enBtn.classList.toggle("active", lang === "en");
-arBtn.classList.toggle("active", lang === "ar");
+      enBtn.classList.toggle("active", lang === "en");
+      arBtn.classList.toggle("active", lang === "ar");
 
-localStorage.setItem("siteLanguage", lang);
-}
+      localStorage.setItem("siteLanguage", lang);
+    }
+
     async function loadPatient() {
-      const response = await fetch(`http://localhost:5050/my-patient/${loggedInUser.user_id}`);
+      const response = await fetch(`/my-patient/${loggedInUser.user_id}`);
       const data = await response.json();
 
       if (data.success) {
@@ -672,7 +672,7 @@ localStorage.setItem("siteLanguage", lang);
     }
 
     async function loadDoctors() {
-      const response = await fetch("http://localhost:5050/doctors");
+      const response = await fetch(`/doctors`);
       const doctors = await response.json();
 
       doctorsMap = {};
@@ -694,14 +694,15 @@ localStorage.setItem("siteLanguage", lang);
         const doctorName = doctor ? doctor.full_name : content[currentLang].doctorFallback;
         const doctorSpec = doctor ? (doctor.specialization || "") : "";
 
-       const rawStatus = item.status || "Approved";
-const statusClass = rawStatus === "Pending" ? "pending" : "approved";
+        const rawStatus = item.status || "Approved";
+        const statusClass = rawStatus === "Pending" ? "pending" : "approved";
 
-let statusText = rawStatus;
-if (currentLang === "ar") {
-  if (rawStatus === "Pending") statusText = content[currentLang].pending;
-  if (rawStatus === "Approved") statusText = content[currentLang].approved;
-}
+        let statusText = rawStatus;
+        if (currentLang === "ar") {
+          if (rawStatus === "Pending") statusText = content[currentLang].pending;
+          if (rawStatus === "Approved") statusText = content[currentLang].approved;
+        }
+
         const medLine2 =
           [item.dosage, item.frequency].filter(Boolean).join(" • ") ||
           item.treatment_duration ||
@@ -736,11 +737,11 @@ if (currentLang === "ar") {
     }
 
     async function loadPrescriptions() {
-      const response = await fetch("http://localhost:5050/prescriptions");
+      const response = await fetch(`/prescriptions`);
       const prescriptions = await response.json();
 
       allMyPrescriptions = prescriptions.filter(
-        item => Number(item.patient_id) === Number(patientData.patient_id)
+        (item) => Number(item.patient_id) === Number(patientData.patient_id)
       );
 
       renderPrescriptions(allMyPrescriptions);
@@ -783,8 +784,9 @@ if (currentLang === "ar") {
         await loadPrescriptions();
       } catch (error) {
         console.error(error);
-        showMessage(content[localStorage.getItem("siteLanguage") || "en"].failedLoad, "error");
-        prescriptionsContainer.innerHTML = `<div class="empty-box">${content[localStorage.getItem("siteLanguage") || "en"].failedLoad}</div>`;
+        const currentLang = localStorage.getItem("siteLanguage") || "en";
+        showMessage(content[currentLang].failedLoad, "error");
+        prescriptionsContainer.innerHTML = `<div class="empty-box">${content[currentLang].failedLoad}</div>`;
       }
     }
 
