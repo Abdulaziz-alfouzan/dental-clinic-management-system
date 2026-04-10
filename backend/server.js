@@ -363,7 +363,7 @@ app.post("/login", async (req, res) => {
 
     if (
       !RECAPTCHA_SECRET_KEY ||
-      RECAPTCHA_SECRET_KEY === "PUT_YOUR_RECAPTCHA_SECRET_KEY_HERE"
+      RECAPTCHA_SECRET_KEY === "6LdIJK0sAAAAADxMqLvwTT8HJXJCUwjTHds27FI6"
     ) {
       return res.status(500).json({
         success: false,
@@ -449,7 +449,7 @@ app.post("/login", async (req, res) => {
 });
 
 /* =========================
-   APPOINTMENTS
+   booking appointment
 ========================= */
 
 // BOOK appointment
@@ -511,8 +511,17 @@ app.post("/appointments", async (req, res) => {
     const result = await pool.query(
       `
       INSERT INTO "Dental_Clinic_Management_System".appointments
-      (patient_id, doctor_id, appointment_date, appointment_time, status, reason_for_visit)
-      VALUES ($1, $2, $3, $4, $5, $6)
+      (
+        patient_id,
+        doctor_id,
+        appointment_date,
+        appointment_time,
+        status,
+        reason_for_visit,
+        created_at,
+        updated_at
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
       RETURNING *
       `,
       [
