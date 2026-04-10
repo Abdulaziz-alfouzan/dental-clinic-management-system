@@ -352,6 +352,11 @@
             </div>
           </div>
 
+          <div class="field">
+            <label for="confirmPassword" id="confirmPasswordLabel">Confirm Password</label>
+            <input class="input" type="password" id="confirmPassword" placeholder="Confirm your password" required />
+          </div>
+
           <button class="btn" id="registerBtn" type="submit">Register</button>
         </form>
 
@@ -388,16 +393,19 @@
         passwordLabel: "Password",
         passwordPlaceholder: "Enter your password",
         passwordHint: "Password must be at least 8 characters and include 1 uppercase letter and 1 number.",
+        confirmPasswordLabel: "Confirm Password",
+        confirmPasswordPlaceholder: "Confirm your password",
         registerBtn: "Register",
         loginText: "Already have an account?",
         loginLinkText: "Login",
         nameError: "Full name must be at least 2 characters",
         passwordError: "Password must be at least 8 characters and include uppercase and number",
+        matchError: "Passwords do not match",
         successMessage: "Registered successfully",
         failedMessage: "Registration failed",
         connectionError: "Error connecting to server",
         loadingText: "Registering...",
-        serverRegistrationError: "Server error during registration"
+        serverRegistrationError: "Server error"
       },
       ar: {
         htmlLang: "ar",
@@ -413,16 +421,19 @@
         passwordLabel: "كلمة المرور",
         passwordPlaceholder: "أدخل كلمة المرور",
         passwordHint: "يجب أن تكون كلمة المرور 8 أحرف على الأقل وتحتوي على حرف كبير ورقم واحد.",
+        confirmPasswordLabel: "تأكيد كلمة المرور",
+        confirmPasswordPlaceholder: "أكد كلمة المرور",
         registerBtn: "تسجيل",
         loginText: "لديك حساب بالفعل؟",
         loginLinkText: "تسجيل الدخول",
         nameError: "يجب أن يكون الاسم مكونًا من حرفين على الأقل",
         passwordError: "يجب أن تكون كلمة المرور 8 أحرف على الأقل وتحتوي على حرف كبير ورقم",
+        matchError: "كلمتا المرور غير متطابقتين",
         successMessage: "تم التسجيل بنجاح",
         failedMessage: "فشل التسجيل",
         connectionError: "تعذر الاتصال بالخادم",
         loadingText: "جاري التسجيل...",
-        serverRegistrationError: "حدث خطأ في الخادم أثناء التسجيل"
+        serverRegistrationError: "حدث خطأ في الخادم"
       }
     };
 
@@ -441,7 +452,10 @@
         return content[currentLang].failedMessage;
       }
 
-      if (message === "Server error during registration") {
+      if (
+        message === "Server error during registration" ||
+        message === "Server error"
+      ) {
         return content[currentLang].serverRegistrationError;
       }
 
@@ -466,6 +480,8 @@
       document.getElementById("passwordLabel").textContent = selected.passwordLabel;
       document.getElementById("password").placeholder = selected.passwordPlaceholder;
       document.getElementById("passwordHint").textContent = selected.passwordHint;
+      document.getElementById("confirmPasswordLabel").textContent = selected.confirmPasswordLabel;
+      document.getElementById("confirmPassword").placeholder = selected.confirmPasswordPlaceholder;
       registerBtn.textContent = selected.registerBtn;
       document.getElementById("loginText").textContent = selected.loginText + " ";
       document.getElementById("loginLinkText").textContent = selected.loginLinkText;
@@ -487,6 +503,7 @@
       const full_name = document.getElementById("fullName").value.trim();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
       const currentLang = localStorage.getItem("siteLanguage") || "en";
 
       const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
@@ -498,6 +515,11 @@
 
       if (!passwordRegex.test(password)) {
         showMessage(content[currentLang].passwordError, "error");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showMessage(content[currentLang].matchError, "error");
         return;
       }
 

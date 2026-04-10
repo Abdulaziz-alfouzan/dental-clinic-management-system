@@ -60,7 +60,7 @@ app.get("/patients", async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT *
-      FROM "Dental_Clinic_Management_System"."patients"
+      FROM patients
       ORDER BY patient_id ASC
     `);
 
@@ -85,8 +85,8 @@ app.get("/doctors", async (req, res) => {
         d.specialization,
         d.clinic_room,
         d.phone
-      FROM "Dental_Clinic_Management_System"."doctors" d
-      JOIN "Dental_Clinic_Management_System"."users" u
+      FROM doctors d
+      JOIN users u
         ON d.user_id = u.user_id
       ORDER BY d.doctor_id ASC
     `);
@@ -106,7 +106,7 @@ app.get("/appointments", async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT *
-      FROM "Dental_Clinic_Management_System"."appointments"
+      FROM appointments
       ORDER BY appointment_id ASC
     `);
 
@@ -125,7 +125,7 @@ app.get("/prescriptions", async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT *
-      FROM "Dental_Clinic_Management_System"."prescriptions"
+      FROM prescriptions
       ORDER BY prescription_id ASC
     `);
 
@@ -147,7 +147,7 @@ app.get("/my-patient/:userId", async (req, res) => {
     const result = await pool.query(
       `
       SELECT *
-      FROM "Dental_Clinic_Management_System"."patients"
+      FROM patients
       WHERE user_id = $1
       `,
       [userId]
@@ -248,7 +248,7 @@ app.post("/register", async (req, res) => {
     const existingUser = await client.query(
       `
       SELECT user_id
-      FROM "Dental_Clinic_Management_System"."users"
+      FROM users
       WHERE LOWER(email) = LOWER($1)
       `,
       [email.trim()]
@@ -265,28 +265,39 @@ app.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await client.query(
-  `
-  INSERT INTO "Dental_Clinic_Management_System"."users"
-  (full_name, email, password_hash, role, is_active, two_factor_enabled, failed_login_count, locked_until, created_at, updated_at)
-  VALUES ($1, $2, $3, $4, $5, $6, $7, NULL, NOW(), NOW())
-  RETURNING user_id, full_name, email, role
-  `,
-  [
-    full_name.trim(),
-    email.trim(),
-    hashedPassword,
-    "Patient",
-    true,
-    false,
-    0
-  ]
-);
+      `
+      INSERT INTO users
+      (
+        full_name,
+        email,
+        password_hash,
+        role,
+        is_active,
+        two_factor_enabled,
+        failed_login_count,
+        locked_until,
+        created_at,
+        updated_at
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, NULL, NOW(), NOW())
+      RETURNING user_id, full_name, email, role
+      `,
+      [
+        full_name.trim(),
+        email.trim(),
+        hashedPassword,
+        "Patient",
+        true,
+        false,
+        0
+      ]
+    );
 
     const user_id = newUser.rows[0].user_id;
 
     const newPatient = await client.query(
       `
-      INSERT INTO "Dental_Clinic_Management_System"."patients"
+      INSERT INTO patients
       (user_id, phone, birth_date, address, emergency_contact, medical_notes)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *
@@ -310,12 +321,12 @@ app.post("/register", async (req, res) => {
       patient: newPatient.rows[0]
     });
   } catch (err) {
-  await client.query("ROLLBACK");
-  console.error("POST /register error:", err.message);
-  res.status(500).json({
-    success: false,
-    message: err.message
-  });
+    await client.query("ROLLBACK");
+    console.error("POST /register error:", err.message);
+    res.status(500).json({
+      success: false,
+      message: "Server error during registration"
+    });
   } finally {
     client.release();
   }
@@ -356,7 +367,7 @@ app.post("/login", async (req, res) => {
     ) {
       return res.status(500).json({
         success: false,
-        message: "reCAPTCHA secret key is not configured"
+        message: "Server error"
       });
     }
 
@@ -381,7 +392,7 @@ app.post("/login", async (req, res) => {
     const result = await pool.query(
       `
       SELECT user_id, full_name, email, role, is_active, password_hash
-      FROM "Dental_Clinic_Management_System"."users"
+      FROM users
       WHERE LOWER(email) = LOWER($1)
       `,
       [email.trim()]
@@ -480,7 +491,7 @@ app.post("/appointments", async (req, res) => {
     const existingAppointment = await pool.query(
       `
       SELECT appointment_id
-      FROM "Dental_Clinic_Management_System"."appointments"
+      FROM appointments
       WHERE doctor_id = $1
         AND appointment_date = $2
         AND appointment_time = $3
@@ -499,7 +510,7 @@ app.post("/appointments", async (req, res) => {
 
     const result = await pool.query(
       `
-      INSERT INTO "Dental_Clinic_Management_System"."appointments"
+      INSERT INTO appointments
       (patient_id, doctor_id, appointment_date, appointment_time, status, reason_for_visit)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *
@@ -544,7 +555,7 @@ app.put("/appointments/:id/cancel", async (req, res) => {
     const result = await pool.query(
       `
       SELECT appointment_date, appointment_time, status
-      FROM "Dental_Clinic_Management_System"."appointments"
+      FROM appointments
       WHERE appointment_id = $1
       `,
       [id]
@@ -582,7 +593,7 @@ app.put("/appointments/:id/cancel", async (req, res) => {
 
     await pool.query(
       `
-      UPDATE "Dental_Clinic_Management_System"."appointments"
+      UPDATE appointments
       SET status = 'Cancelled',
           cancelled_at = NOW(),
           updated_at = NOW()
@@ -635,7 +646,7 @@ app.put("/appointments/:id/reschedule", async (req, res) => {
     const currentAppointment = await pool.query(
       `
       SELECT appointment_id, doctor_id, status, appointment_date, appointment_time
-      FROM "Dental_Clinic_Management_System"."appointments"
+      FROM appointments
       WHERE appointment_id = $1
       `,
       [id]
@@ -660,7 +671,7 @@ app.put("/appointments/:id/reschedule", async (req, res) => {
     const sameAppointmentCheck = await pool.query(
       `
       SELECT appointment_id
-      FROM "Dental_Clinic_Management_System"."appointments"
+      FROM appointments
       WHERE appointment_id = $1
         AND appointment_date = $2
         AND appointment_time = $3
@@ -678,7 +689,7 @@ app.put("/appointments/:id/reschedule", async (req, res) => {
     const existingAppointment = await pool.query(
       `
       SELECT appointment_id
-      FROM "Dental_Clinic_Management_System"."appointments"
+      FROM appointments
       WHERE doctor_id = $1
         AND appointment_date = $2
         AND appointment_time = $3
@@ -698,7 +709,7 @@ app.put("/appointments/:id/reschedule", async (req, res) => {
 
     const updatedAppointment = await pool.query(
       `
-      UPDATE "Dental_Clinic_Management_System"."appointments"
+      UPDATE appointments
       SET appointment_date = $1,
           appointment_time = $2,
           updated_at = NOW(),
@@ -766,7 +777,7 @@ app.put("/profile/:userId", async (req, res) => {
 
     const userResult = await client.query(
       `
-      UPDATE "Dental_Clinic_Management_System"."users"
+      UPDATE users
       SET full_name = $1
       WHERE user_id = $2
       RETURNING user_id
@@ -784,7 +795,7 @@ app.put("/profile/:userId", async (req, res) => {
 
     const patientResult = await client.query(
       `
-      UPDATE "Dental_Clinic_Management_System"."patients"
+      UPDATE patients
       SET phone = $1,
           birth_date = $2,
           address = $3,
@@ -851,7 +862,7 @@ app.put("/profile-image/:userId", async (req, res) => {
 
     const result = await client.query(
       `
-      UPDATE "Dental_Clinic_Management_System"."patients"
+      UPDATE patients
       SET profile_image = $1
       WHERE user_id = $2
       RETURNING user_id
