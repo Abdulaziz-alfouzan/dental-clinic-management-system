@@ -267,8 +267,8 @@ app.post("/register", async (req, res) => {
     const newUser = await client.query(
   `
   INSERT INTO "Dental_Clinic_Management_System"."users"
-  (full_name, email, password_hash, role, is_active, two_factor_enabled, failed_login_count)
-  VALUES ($1, $2, $3, $4, $5, $6, $7)
+  (full_name, email, password_hash, role, is_active, two_factor_enabled, failed_login_count, created_at, updated_at)
+  VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())
   RETURNING user_id, full_name, email, role
   `,
   [
