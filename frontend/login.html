@@ -395,6 +395,7 @@
   </div>
 
   <script>
+    const API_URL = "https://dental-clinic-management-system-wgmv.onrender.com";
     const form = document.getElementById("loginForm");
     const loginBtn = document.getElementById("loginBtn");
     const messageBox = document.getElementById("messageBox");
@@ -523,7 +524,7 @@
       loginBtn.textContent = content[currentLang].loggingIn;
 
       try {
-        const response = await fetch("/login", {
+        const response = await fetch(`${API_URL}/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

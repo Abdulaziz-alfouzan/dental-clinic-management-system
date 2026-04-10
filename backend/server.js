@@ -60,7 +60,7 @@ app.get("/patients", async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT *
-      FROM patients
+      FROM "Dental_Clinic_Management_System".patients
       ORDER BY patient_id ASC
     `);
 
@@ -85,8 +85,8 @@ app.get("/doctors", async (req, res) => {
         d.specialization,
         d.clinic_room,
         d.phone
-      FROM doctors d
-      JOIN users u
+      FROM "Dental_Clinic_Management_System".doctors d
+      JOIN "Dental_Clinic_Management_System".users u
         ON d.user_id = u.user_id
       ORDER BY d.doctor_id ASC
     `);
@@ -106,7 +106,7 @@ app.get("/appointments", async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT *
-      FROM appointments
+      FROM "Dental_Clinic_Management_System".appointments
       ORDER BY appointment_id ASC
     `);
 
@@ -125,7 +125,7 @@ app.get("/prescriptions", async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT *
-      FROM prescriptions
+      FROM "Dental_Clinic_Management_System".prescriptions
       ORDER BY prescription_id ASC
     `);
 
@@ -147,7 +147,7 @@ app.get("/my-patient/:userId", async (req, res) => {
     const result = await pool.query(
       `
       SELECT *
-      FROM patients
+      FROM "Dental_Clinic_Management_System".patients
       WHERE user_id = $1
       `,
       [userId]
@@ -248,7 +248,7 @@ app.post("/register", async (req, res) => {
     const existingUser = await client.query(
       `
       SELECT user_id
-      FROM users
+      FROM "Dental_Clinic_Management_System".users
       WHERE LOWER(email) = LOWER($1)
       `,
       [email.trim()]
@@ -266,7 +266,7 @@ app.post("/register", async (req, res) => {
 
     const newUser = await client.query(
       `
-      INSERT INTO users
+      INSERT INTO "Dental_Clinic_Management_System".users
       (
         full_name,
         email,
@@ -297,7 +297,7 @@ app.post("/register", async (req, res) => {
 
     const newPatient = await client.query(
       `
-      INSERT INTO patients
+      INSERT INTO "Dental_Clinic_Management_System".patients
       (user_id, phone, birth_date, address, emergency_contact, medical_notes)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *
@@ -320,16 +320,16 @@ app.post("/register", async (req, res) => {
       user: newUser.rows[0],
       patient: newPatient.rows[0]
     });
- } catch (err) {
-  await client.query("ROLLBACK");
-  console.error("POST /register error:", err.message);
-  res.status(500).json({
-    success: false,
-    message: err.message
-  });
-} finally {
-  client.release();
-}
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("POST /register error:", err.message);
+    res.status(500).json({
+      success: false,
+      message: "Server error during registration"
+    });
+  } finally {
+    client.release();
+  }
 });
 
 /* =========================
@@ -392,7 +392,7 @@ app.post("/login", async (req, res) => {
     const result = await pool.query(
       `
       SELECT user_id, full_name, email, role, is_active, password_hash
-      FROM users
+      FROM "Dental_Clinic_Management_System".users
       WHERE LOWER(email) = LOWER($1)
       `,
       [email.trim()]
@@ -491,7 +491,7 @@ app.post("/appointments", async (req, res) => {
     const existingAppointment = await pool.query(
       `
       SELECT appointment_id
-      FROM appointments
+      FROM "Dental_Clinic_Management_System".appointments
       WHERE doctor_id = $1
         AND appointment_date = $2
         AND appointment_time = $3
@@ -510,7 +510,7 @@ app.post("/appointments", async (req, res) => {
 
     const result = await pool.query(
       `
-      INSERT INTO appointments
+      INSERT INTO "Dental_Clinic_Management_System".appointments
       (patient_id, doctor_id, appointment_date, appointment_time, status, reason_for_visit)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *
@@ -555,7 +555,7 @@ app.put("/appointments/:id/cancel", async (req, res) => {
     const result = await pool.query(
       `
       SELECT appointment_date, appointment_time, status
-      FROM appointments
+      FROM "Dental_Clinic_Management_System".appointments
       WHERE appointment_id = $1
       `,
       [id]
@@ -593,7 +593,7 @@ app.put("/appointments/:id/cancel", async (req, res) => {
 
     await pool.query(
       `
-      UPDATE appointments
+      UPDATE "Dental_Clinic_Management_System".appointments
       SET status = 'Cancelled',
           cancelled_at = NOW(),
           updated_at = NOW()
@@ -646,7 +646,7 @@ app.put("/appointments/:id/reschedule", async (req, res) => {
     const currentAppointment = await pool.query(
       `
       SELECT appointment_id, doctor_id, status, appointment_date, appointment_time
-      FROM appointments
+      FROM "Dental_Clinic_Management_System".appointments
       WHERE appointment_id = $1
       `,
       [id]
@@ -671,7 +671,7 @@ app.put("/appointments/:id/reschedule", async (req, res) => {
     const sameAppointmentCheck = await pool.query(
       `
       SELECT appointment_id
-      FROM appointments
+      FROM "Dental_Clinic_Management_System".appointments
       WHERE appointment_id = $1
         AND appointment_date = $2
         AND appointment_time = $3
@@ -689,7 +689,7 @@ app.put("/appointments/:id/reschedule", async (req, res) => {
     const existingAppointment = await pool.query(
       `
       SELECT appointment_id
-      FROM appointments
+      FROM "Dental_Clinic_Management_System".appointments
       WHERE doctor_id = $1
         AND appointment_date = $2
         AND appointment_time = $3
@@ -709,7 +709,7 @@ app.put("/appointments/:id/reschedule", async (req, res) => {
 
     const updatedAppointment = await pool.query(
       `
-      UPDATE appointments
+      UPDATE "Dental_Clinic_Management_System".appointments
       SET appointment_date = $1,
           appointment_time = $2,
           updated_at = NOW(),
@@ -777,7 +777,7 @@ app.put("/profile/:userId", async (req, res) => {
 
     const userResult = await client.query(
       `
-      UPDATE users
+      UPDATE "Dental_Clinic_Management_System".users
       SET full_name = $1
       WHERE user_id = $2
       RETURNING user_id
@@ -795,7 +795,7 @@ app.put("/profile/:userId", async (req, res) => {
 
     const patientResult = await client.query(
       `
-      UPDATE patients
+      UPDATE "Dental_Clinic_Management_System".patients
       SET phone = $1,
           birth_date = $2,
           address = $3,
@@ -862,7 +862,7 @@ app.put("/profile-image/:userId", async (req, res) => {
 
     const result = await client.query(
       `
-      UPDATE patients
+      UPDATE "Dental_Clinic_Management_System".patients
       SET profile_image = $1
       WHERE user_id = $2
       RETURNING user_id

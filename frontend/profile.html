@@ -555,6 +555,7 @@
 
   <script>
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const API_URL = "https://dental-clinic-management-system-wgmv.onrender.com";
 
     if (!loggedInUser) {
       window.location.href = "login.html";
@@ -697,7 +698,7 @@
 
     async function loadProfile() {
       try {
-        const res = await fetch(`/my-patient/${loggedInUser.user_id}`);
+        const res = await fetch(`${API_URL}/my-patient/${loggedInUser.user_id}`);
         const data = await res.json();
 
         if (!data.success) {
@@ -751,7 +752,7 @@
         avatarCircle.innerHTML = `<img src="${image}" alt="Profile Photo">`;
 
         try {
-          const res = await fetch(`/profile-image/${loggedInUser.user_id}`, {
+          const res = await fetch(`${API_URL}/profile-image/${loggedInUser.user_id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json"
@@ -785,7 +786,7 @@
       saveBtn.textContent = content[lang].loadingText;
 
       try {
-        const res = await fetch(`/profile/${loggedInUser.user_id}`, {
+        const res = await fetch(`${API_URL}/profile/${loggedInUser.user_id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json"
@@ -803,8 +804,9 @@
         const data = await res.json();
 
         if (data.success) {
+          const currentUser = JSON.parse(localStorage.getItem("loggedInUser")) || loggedInUser;
           const updatedUser = {
-            ...loggedInUser,
+            ...currentUser,
             full_name: fullNameInput.value.trim()
           };
 

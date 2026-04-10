@@ -538,6 +538,7 @@
 
   <script>
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const API_URL = "https://dental-clinic-management-system-wgmv.onrender.com";
 
     if (!loggedInUser) {
       window.location.href = "login.html";
@@ -624,6 +625,7 @@
 
     function applyLanguage(lang) {
       const selected = content[lang];
+      const currentUser = JSON.parse(localStorage.getItem("loggedInUser")) || loggedInUser;
 
       document.documentElement.lang = selected.htmlLang;
       document.documentElement.dir = selected.dir;
@@ -651,8 +653,7 @@
       }
 
       document.getElementById("searchInput").placeholder = selected.searchPlaceholder;
-
-      userNameBox.textContent = loggedInUser.full_name || "Patient";
+      userNameBox.textContent = currentUser.full_name || "Patient";
 
       enBtn.classList.toggle("active", lang === "en");
       arBtn.classList.toggle("active", lang === "ar");
@@ -661,7 +662,7 @@
     }
 
     async function loadPatient() {
-      const response = await fetch(`/my-patient/${loggedInUser.user_id}`);
+      const response = await fetch(`${API_URL}/my-patient/${loggedInUser.user_id}`);
       const data = await response.json();
 
       if (data.success) {
@@ -672,7 +673,7 @@
     }
 
     async function loadDoctors() {
-      const response = await fetch(`/doctors`);
+      const response = await fetch(`${API_URL}/doctors`);
       const doctors = await response.json();
 
       doctorsMap = {};
@@ -737,7 +738,7 @@
     }
 
     async function loadPrescriptions() {
-      const response = await fetch(`/prescriptions`);
+      const response = await fetch(`${API_URL}/prescriptions`);
       const prescriptions = await response.json();
 
       allMyPrescriptions = prescriptions.filter(
