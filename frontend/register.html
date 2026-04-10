@@ -511,18 +511,18 @@
       registerBtn.textContent = content[currentLang].loadingText;
 
       try {
-        constresponse = await  fetch(`${window.location.origin}/register`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            full_name,
-            email,
-            password,
-            confirm_password
-          })
-        });
+        const response = await fetch("https://dental-clinic-management-system-wgmv.onrender.com/register", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    full_name,
+    email,
+    password,
+    confirm_password
+  })
+});
 
         const data = await response.json();
 
