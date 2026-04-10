@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
 const bcrypt = require("bcrypt");
+const path = require("path");
 const pool = require("./db");
 
 const app = express();
@@ -26,14 +27,6 @@ function isValidPhone(phone) {
 function isValidDate(date) {
   return !isNaN(Date.parse(date));
 }
-
-/* =========================
-   TEST ROUTE
-========================= */
-
-app.get("/", (req, res) => {
-  res.send("API is working 🚀");
-});
 
 /* =========================
    GET ROUTES
@@ -831,9 +824,20 @@ app.put("/profile-image/:userId", async (req, res) => {
   }
 });
 
-/* =========================
-   START SERVER
-========================= */
+// ================================
+// SERVE FRONTEND
+// ================================
+
+app.use(express.static(path.join(__dirname, "../frontend")));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend", "home.html"));
+});
+
+
+// ================================
+// START SERVER
+// ================================
 
 const PORT = process.env.PORT || 5050;
 
