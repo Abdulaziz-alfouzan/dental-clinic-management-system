@@ -185,7 +185,6 @@ app.post("/register", async (req, res) => {
       full_name,
       email,
       password,
-      confirm_password,
       phone,
       birth_date,
       address,
@@ -193,10 +192,10 @@ app.post("/register", async (req, res) => {
       medical_notes
     } = req.body;
 
-    if (!full_name || !email || !password || !confirm_password) {
+    if (!full_name || !email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Full name, email, password, and confirm password are required"
+        message: "Full name, email, and password are required"
       });
     }
 
@@ -227,13 +226,6 @@ app.post("/register", async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Password should not contain spaces"
-      });
-    }
-
-    if (password !== confirm_password) {
-      return res.status(400).json({
-        success: false,
-        message: "Passwords do not match"
       });
     }
 

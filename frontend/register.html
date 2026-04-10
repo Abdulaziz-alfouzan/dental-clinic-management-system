@@ -286,8 +286,6 @@
         align-items: stretch;
       }
 
-     
-
       .logo-box {
         min-width: unset;
         width: 100%;
@@ -354,11 +352,6 @@
             </div>
           </div>
 
-          <div class="field">
-            <label for="confirmPassword" id="confirmPasswordLabel">Confirm Password</label>
-            <input class="input" type="password" id="confirmPassword" placeholder="Confirm your password" required />
-          </div>
-
           <button class="btn" id="registerBtn" type="submit">Register</button>
         </form>
 
@@ -378,6 +371,7 @@
     const messageBox = document.getElementById("messageBox");
     const enBtn = document.getElementById("enBtn");
     const arBtn = document.getElementById("arBtn");
+    const API_URL = "https://dental-clinic-management-system-wgmv.onrender.com";
 
     const content = {
       en: {
@@ -394,18 +388,16 @@
         passwordLabel: "Password",
         passwordPlaceholder: "Enter your password",
         passwordHint: "Password must be at least 8 characters and include 1 uppercase letter and 1 number.",
-        confirmPasswordLabel: "Confirm Password",
-        confirmPasswordPlaceholder: "Confirm your password",
         registerBtn: "Register",
         loginText: "Already have an account?",
         loginLinkText: "Login",
         nameError: "Full name must be at least 2 characters",
         passwordError: "Password must be at least 8 characters and include uppercase and number",
-        matchError: "Passwords do not match",
         successMessage: "Registered successfully",
         failedMessage: "Registration failed",
         connectionError: "Error connecting to server",
-        loadingText: "Registering..."
+        loadingText: "Registering...",
+        serverRegistrationError: "Server error during registration"
       },
       ar: {
         htmlLang: "ar",
@@ -421,18 +413,16 @@
         passwordLabel: "كلمة المرور",
         passwordPlaceholder: "أدخل كلمة المرور",
         passwordHint: "يجب أن تكون كلمة المرور 8 أحرف على الأقل وتحتوي على حرف كبير ورقم واحد.",
-        confirmPasswordLabel: "تأكيد كلمة المرور",
-        confirmPasswordPlaceholder: "أكد كلمة المرور",
         registerBtn: "تسجيل",
         loginText: "لديك حساب بالفعل؟",
         loginLinkText: "تسجيل الدخول",
         nameError: "يجب أن يكون الاسم مكونًا من حرفين على الأقل",
         passwordError: "يجب أن تكون كلمة المرور 8 أحرف على الأقل وتحتوي على حرف كبير ورقم",
-        matchError: "كلمتا المرور غير متطابقتين",
         successMessage: "تم التسجيل بنجاح",
         failedMessage: "فشل التسجيل",
         connectionError: "تعذر الاتصال بالخادم",
-        loadingText: "جاري التسجيل..."
+        loadingText: "جاري التسجيل...",
+        serverRegistrationError: "حدث خطأ في الخادم أثناء التسجيل"
       }
     };
 
@@ -444,6 +434,18 @@
     function clearMessage() {
       messageBox.textContent = "";
       messageBox.className = "message-box";
+    }
+
+    function normalizeServerMessage(message, currentLang) {
+      if (!message) {
+        return content[currentLang].failedMessage;
+      }
+
+      if (message === "Server error during registration") {
+        return content[currentLang].serverRegistrationError;
+      }
+
+      return message;
     }
 
     function applyLanguage(lang) {
@@ -464,8 +466,6 @@
       document.getElementById("passwordLabel").textContent = selected.passwordLabel;
       document.getElementById("password").placeholder = selected.passwordPlaceholder;
       document.getElementById("passwordHint").textContent = selected.passwordHint;
-      document.getElementById("confirmPasswordLabel").textContent = selected.confirmPasswordLabel;
-      document.getElementById("confirmPassword").placeholder = selected.confirmPasswordPlaceholder;
       registerBtn.textContent = selected.registerBtn;
       document.getElementById("loginText").textContent = selected.loginText + " ";
       document.getElementById("loginLinkText").textContent = selected.loginLinkText;
@@ -487,7 +487,6 @@
       const full_name = document.getElementById("fullName").value.trim();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
-      const confirm_password = document.getElementById("confirmPassword").value;
       const currentLang = localStorage.getItem("siteLanguage") || "en";
 
       const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
@@ -502,27 +501,21 @@
         return;
       }
 
-      if (password !== confirm_password) {
-        showMessage(content[currentLang].matchError, "error");
-        return;
-      }
-
       registerBtn.disabled = true;
       registerBtn.textContent = content[currentLang].loadingText;
 
       try {
-        const response = await fetch("https://dental-clinic-management-system-wgmv.onrender.com/register", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    full_name,
-    email,
-    password,
-    confirm_password
-  })
-});
+        const response = await fetch(`${API_URL}/register`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            full_name,
+            email,
+            password
+          })
+        });
 
         const data = await response.json();
 
@@ -534,7 +527,10 @@
             window.location.href = "appointment.html";
           }, 700);
         } else {
-          showMessage(data.message || content[currentLang].failedMessage, "error");
+          showMessage(
+            normalizeServerMessage(data.message, currentLang),
+            "error"
+          );
         }
       } catch (error) {
         console.error(error);
