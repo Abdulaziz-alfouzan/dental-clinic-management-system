@@ -361,15 +361,12 @@ app.post("/login", async (req, res) => {
       });
     }
 
-    if (
-      !RECAPTCHA_SECRET_KEY ||
-      RECAPTCHA_SECRET_KEY === "6LdIJK0sAAAAADxMqLvwTT8HJXJCUwjTHds27FI6"
-    ) {
-      return res.status(500).json({
-        success: false,
-        message: "Server error"
-      });
-    }
+    if (!RECAPTCHA_SECRET_KEY) {
+  return res.status(500).json({
+    success: false,
+    message: "Server error"
+  });
+}
 
     const captchaVerify = await axios.post(
       "https://www.google.com/recaptcha/api/siteverify",
