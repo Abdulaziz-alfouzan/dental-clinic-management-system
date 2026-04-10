@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SoftwareDoctors Dental Clinic</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    :root {
+      --primary: #178e9c;
+      --primary-dark: #0f6f7b;
+      --text-main: #203540;
+      --text-soft: #506874;
+      --card-bg: rgba(255, 255, 255, 0.42);
+      --card-border: rgba(255, 255, 255, 0.62);
+      --white-soft: rgba(255, 255, 255, 0.82);
+      --shadow: 0 14px 34px rgba(43, 69, 88, 0.09);
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at top left, rgba(74, 163, 175, 0.22), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(74, 163, 175, 0.25), transparent 28%),
+        linear-gradient(135deg, #d9edf0 0%, #f4f2fa 48%, #d7eef1 100%);
+    }
+
+    .page-shell {
+      max-width: 1320px;
+      margin: 24px auto;
+      padding: 0 20px 28px;
+    }
+
+    .topbar {
+      min-height: 110px;
+      border: 1px solid rgba(255, 255, 255, 0.58);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.38);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 10px 30px rgba(40, 70, 90, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      gap: 16px;
+    }
+
+    .logo-box {
+      min-width: 285px;
+      max-width: 340px;
+      min-height: 74px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 8px 22px rgba(50, 80, 100, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      flex-shrink: 0;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #48a8b3, #2f7f8b);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      line-height: 1.15;
+    }
+
+    .logo-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #2a6f79;
+      letter-spacing: 0.2px;
+    }
+
+    .logo-subtitle {
+      font-size: 13px;
+      color: #445b66;
+      margin-top: 4px;
+      font-weight: 700;
+    }
+
+    .lang-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 8px 18px rgba(50, 80, 100, 0.08);
+      flex-shrink: 0;
+    }
+
+    .lang-btn {
+      min-width: 68px;
+      height: 44px;
+      border: none;
+      border-radius: 999px;
+      background: transparent;
+      color: #55707a;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .lang-btn.active {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(20, 120, 134, 0.28);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(350px, 0.9fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .left-stack,
+    .right-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .glass-card {
+      border: 1px solid var(--card-border);
+      border-radius: 30px;
+      background: var(--card-bg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .welcome-box,
+    .action-box,
+    .services-box,
+    .stats-box,
+    .image-box {
+      padding: 30px;
+    }
+
+    .main-title {
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.08;
+      color: #223742;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      font-size: 19px;
+      line-height: 1.9;
+      color: var(--text-soft);
+    }
+
+    .section-title {
+      font-size: 31px;
+      font-weight: 800;
+      color: #224552;
+      margin-bottom: 16px;
+    }
+
+    .action-text {
+      font-size: 18px;
+      line-height: 1.9;
+      color: #4a6571;
+      margin-bottom: 24px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .main-btn,
+    .secondary-btn {
+      min-width: 210px;
+      height: 56px;
+      border-radius: 999px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      font-weight: 800;
+      transition: 0.2s ease;
+    }
+
+    .main-btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(16, 110, 121, 0.22);
+    }
+
+    .secondary-btn {
+      background: rgba(255, 255, 255, 0.82);
+      color: #1f3943;
+      border: 1px solid rgba(53, 89, 99, 0.22);
+    }
+
+    .main-btn:hover,
+    .secondary-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .services-box {
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .services-list {
+      display: grid;
+      gap: 18px;
+      margin-top: 8px;
+    }
+
+    .service-item {
+      background: rgba(255, 255, 255, 0.58);
+      border: 1px solid rgba(65, 101, 112, 0.1);
+      border-radius: 20px;
+      padding: 18px 20px;
+      box-shadow: 0 8px 20px rgba(40, 70, 90, 0.04);
+    }
+
+    .service-item h3 {
+      font-size: 21px;
+      font-weight: 800;
+      color: #157f8c;
+      margin-bottom: 7px;
+    }
+
+    .service-item p {
+      font-size: 16px;
+      line-height: 1.8;
+      color: #526b76;
+    }
+
+    .hero-image {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      border-radius: 22px;
+      display: block;
+      box-shadow: 0 10px 24px rgba(40, 70, 90, 0.08);
+    }
+
+    .image-caption {
+      margin-top: 14px;
+      font-size: 16px;
+      line-height: 1.75;
+      color: #45606d;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .stats-box {
+      padding-bottom: 26px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(58, 95, 107, 0.12);
+      border-radius: 22px;
+      padding: 24px 16px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(40, 70, 90, 0.05);
+    }
+
+    .stat-number {
+      font-size: 34px;
+      font-weight: 800;
+      color: #117e8c;
+      margin-bottom: 8px;
+    }
+
+    .stat-text {
+      font-size: 16px;
+      line-height: 1.55;
+      color: #45606d;
+      font-weight: 700;
+    }
+
+    .footer-box {
+      margin-top: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.34);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 10px 28px rgba(40, 70, 90, 0.06);
+      padding: 18px 24px;
+      font-size: 16px;
+      text-align: center;
+      color: #35515d;
+      font-weight: 700;
+    }
+
+    body.rtl {
+      direction: rtl;
+    }
+
+    body.rtl .topbar {
+      flex-direction: row-reverse;
+    }
+
+    body.rtl .logo-box {
+      flex-direction: row-reverse;
+    }
+
+    body.rtl .logo-text {
+      text-align: right;
+    }
+
+    body.rtl .welcome-box,
+    body.rtl .action-box,
+    body.rtl .services-box,
+    body.rtl .stats-box,
+    body.rtl .image-box {
+      text-align: right;
+    }
+
+    body.rtl .btn-row {
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+    }
+
+    body.rtl .service-item h3,
+    body.rtl .service-item p {
+      text-align: right;
+    }
+
+    @media (max-width: 1080px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .main-title {
+        font-size: 42px;
+      }
+
+      .subtitle {
+        font-size: 18px;
+      }
+
+      .services-box {
+        min-height: unset;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .page-shell {
+        padding: 0 12px 20px;
+      }
+
+      .topbar {
+        padding: 18px 16px;
+        gap: 14px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      body.rtl .topbar {
+        flex-direction: column;
+      }
+
+      .logo-box {
+        min-width: unset;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .lang-toggle {
+        align-self: flex-end;
+      }
+
+      .welcome-box,
+      .action-box,
+      .services-box,
+      .stats-box,
+      .image-box {
+        padding: 24px 20px;
+      }
+
+      .main-title {
+        font-size: 34px;
+      }
+
+      .section-title {
+        font-size: 26px;
+      }
+
+      .btn-row {
+        flex-direction: column;
+      }
+
+      body.rtl .btn-row {
+        flex-direction: column;
+      }
+
+      .main-btn,
+      .secondary-btn {
+        width: 100%;
+        min-width: unset;
+      }
+
+      .hero-image {
+        height: 200px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="topbar">
+      <div class="logo-box">
+        <div class="logo-icon">🦷</div>
+        <div class="logo-text">
+          <div class="logo-title" id="logoTitle">SoftwareDoctors</div>
+          <div class="logo-subtitle" id="logoSubtitle">Dental Clinic Management System</div>
+        </div>
+      </div>
+
+      <div class="lang-toggle">
+        <button class="lang-btn active" id="enBtn" type="button">EN</button>
+        <button class="lang-btn" id="arBtn" type="button">AR</button>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="left-stack">
+        <div class="glass-card welcome-box">
+          <h1 class="main-title" id="mainTitle">Welcome to Our Dental Clinic</h1>
+          <p class="subtitle" id="subtitle">
+            We are happy to help you manage your dental appointments in a simple and organized way.
+            Our system allows patients to register, login, and book appointments quickly and easily.
+          </p>
+        </div>
+
+        <div class="glass-card services-box">
+          <h2 class="section-title" id="servicesTitle">Our Services</h2>
+
+          <div class="services-list">
+            <div class="service-item">
+              <h3 id="service1Title">✔ Teeth Cleaning</h3>
+              <p id="service1Text">Professional cleaning to remove plaque and maintain healthy teeth and gums.</p>
+            </div>
+
+            <div class="service-item">
+              <h3 id="service2Title">✔ Whitening</h3>
+              <p id="service2Text">Advanced whitening solutions to give you a brighter and more confident smile.</p>
+            </div>
+
+            <div class="service-item">
+              <h3 id="service3Title">✔ Braces</h3>
+              <p id="service3Text">Orthodontic treatments to align your teeth and improve your bite.</p>
+            </div>
+
+            <div class="service-item">
+              <h3 id="service4Title">✔ Emergency Care</h3>
+              <p id="service4Text">Immediate care for dental pain, injuries, and urgent dental cases.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card action-box">
+          <h2 class="section-title" id="getStartedTitle">Get Started</h2>
+          <p class="action-text" id="actionText">
+            Please choose one of the following options to continue to the patient portal.
+          </p>
+
+          <div class="btn-row">
+            <a class="main-btn" id="loginBtnText" href="login.html">Go to Login</a>
+            <a class="secondary-btn" id="registerBtnText" href="register.html">Go to Register</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-stack">
+        <div class="glass-card image-box">
+          <img
+            class="hero-image"
+            src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=80"
+            alt="Dental clinic"
+          />
+          <div class="image-caption" id="imageCaption1">
+            Modern dental care in a clean and comfortable environment.
+          </div>
+        </div>
+
+        <div class="glass-card image-box">
+          <img
+            class="hero-image"
+            src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=1200&q=80"
+            alt="Dentist working"
+          />
+          <div class="image-caption" id="imageCaption2">
+            Professional doctors providing safe and organized patient care.
+          </div>
+        </div>
+
+        <div class="glass-card stats-box">
+          <h2 class="section-title" id="achievementsTitle">Clinic Achievements</h2>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">500+</div>
+              <div class="stat-text" id="stat1">Successful Appointments</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-number">300+</div>
+              <div class="stat-text" id="stat2">Registered Patients</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-number">10+</div>
+              <div class="stat-text" id="stat3">Professional Doctors</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-number">95%</div>
+              <div class="stat-text" id="stat4">Patient Satisfaction</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-box" id="footerText">
+      SoftwareDoctors Dental Clinic Management System
+    </div>
+  </div>
+
+  <script>
+    const enBtn = document.getElementById("enBtn");
+    const arBtn = document.getElementById("arBtn");
+
+    const content = {
+      en: {
+        htmlLang: "en",
+        dir: "ltr",
+        title: "SoftwareDoctors Dental Clinic",
+        logoTitle: "SoftwareDoctors",
+        logoSubtitle: "Dental Clinic Management System",
+        mainTitle: "Welcome to Our Dental Clinic",
+        subtitle:
+          "We are happy to help you manage your dental appointments in a simple and organized way. Our system allows patients to register, login, and book appointments quickly and easily.",
+        servicesTitle: "Our Services",
+        service1Title: "✔ Teeth Cleaning",
+        service1Text: "Professional cleaning to remove plaque and maintain healthy teeth and gums.",
+        service2Title: "✔ Whitening",
+        service2Text: "Advanced whitening solutions to give you a brighter and more confident smile.",
+        service3Title: "✔ Braces",
+        service3Text: "Orthodontic treatments to align your teeth and improve your bite.",
+        service4Title: "✔ Emergency Care",
+        service4Text: "Immediate care for dental pain, injuries, and urgent dental cases.",
+        getStartedTitle: "Get Started",
+        actionText:
+          "Please choose one of the following options to continue to the patient portal.",
+        loginBtnText: "Go to Login",
+        registerBtnText: "Go to Register",
+        achievementsTitle: "Clinic Achievements",
+        imageCaption1: "Modern dental care in a clean and comfortable environment.",
+        imageCaption2: "Professional doctors providing safe and organized patient care.",
+        stat1: "Successful Appointments",
+        stat2: "Registered Patients",
+        stat3: "Professional Doctors",
+        stat4: "Patient Satisfaction",
+        footerText: "SoftwareDoctors Dental Clinic Management System"
+      },
+      ar: {
+        htmlLang: "ar",
+        dir: "rtl",
+        title: "عيادة سوفتوير دكتورز للأسنان",
+        logoTitle: "SoftwareDoctors",
+        logoSubtitle: "نظام إدارة عيادة الأسنان",
+        mainTitle: "مرحبًا بكم في عيادتنا للأسنان",
+        subtitle:
+          "يسعدنا مساعدتكم في إدارة مواعيد الأسنان بطريقة سهلة ومنظمة. يتيح النظام للمريض التسجيل وتسجيل الدخول وحجز الموعد بسرعة وسهولة.",
+        servicesTitle: "خدماتنا",
+        service1Title: "✔ تنظيف الأسنان",
+        service1Text: "تنظيف احترافي لإزالة الترسبات والمحافظة على صحة الأسنان واللثة.",
+        service2Title: "✔ تبييض الأسنان",
+        service2Text: "حلول متقدمة لتبييض الأسنان تمنحك ابتسامة أكثر إشراقًا وثقة.",
+        service3Title: "✔ تقويم الأسنان",
+        service3Text: "علاجات تقويمية للمساعدة في تنظيم الأسنان وتحسين الإطباق.",
+        service4Title: "✔ رعاية الطوارئ",
+        service4Text: "رعاية سريعة لحالات ألم الأسنان والإصابات والحالات العاجلة.",
+        getStartedTitle: "ابدأ الآن",
+        actionText:
+          "يرجى اختيار أحد الخيارات التالية للمتابعة إلى بوابة المريض.",
+        loginBtnText: "تسجيل الدخول",
+        registerBtnText: "تسجيل جديد",
+        achievementsTitle: "إنجازات العيادة",
+        imageCaption1: "رعاية أسنان حديثة داخل بيئة نظيفة ومريحة للمريض.",
+        imageCaption2: "أطباء محترفون يقدمون رعاية آمنة ومنظمة للمرضى.",
+        stat1: "مواعيد ناجحة",
+        stat2: "مرضى مسجلون",
+        stat3: "أطباء محترفون",
+        stat4: "رضا المرضى",
+        footerText: "SoftwareDoctors نظام إدارة عيادة الأسنان"
+      }
+    };
+
+    function applyLanguage(lang) {
+      const selected = content[lang];
+
+      document.documentElement.lang = selected.htmlLang;
+      document.documentElement.dir = selected.dir;
+      document.body.classList.toggle("rtl", lang === "ar");
+      document.title = selected.title;
+
+      document.getElementById("logoTitle").textContent = selected.logoTitle;
+      document.getElementById("logoSubtitle").textContent = selected.logoSubtitle;
+      document.getElementById("mainTitle").textContent = selected.mainTitle;
+      document.getElementById("subtitle").textContent = selected.subtitle;
+
+      document.getElementById("servicesTitle").textContent = selected.servicesTitle;
+      document.getElementById("service1Title").textContent = selected.service1Title;
+      document.getElementById("service1Text").textContent = selected.service1Text;
+      document.getElementById("service2Title").textContent = selected.service2Title;
+      document.getElementById("service2Text").textContent = selected.service2Text;
+      document.getElementById("service3Title").textContent = selected.service3Title;
+      document.getElementById("service3Text").textContent = selected.service3Text;
+      document.getElementById("service4Title").textContent = selected.service4Title;
+      document.getElementById("service4Text").textContent = selected.service4Text;
+
+      document.getElementById("getStartedTitle").textContent = selected.getStartedTitle;
+      document.getElementById("actionText").textContent = selected.actionText;
+      document.getElementById("loginBtnText").textContent = selected.loginBtnText;
+      document.getElementById("registerBtnText").textContent = selected.registerBtnText;
+
+      document.getElementById("achievementsTitle").textContent = selected.achievementsTitle;
+      document.getElementById("imageCaption1").textContent = selected.imageCaption1;
+      document.getElementById("imageCaption2").textContent = selected.imageCaption2;
+      document.getElementById("stat1").textContent = selected.stat1;
+      document.getElementById("stat2").textContent = selected.stat2;
+      document.getElementById("stat3").textContent = selected.stat3;
+      document.getElementById("stat4").textContent = selected.stat4;
+      document.getElementById("footerText").textContent = selected.footerText;
+
+      enBtn.classList.toggle("active", lang === "en");
+      arBtn.classList.toggle("active", lang === "ar");
+
+      localStorage.setItem("siteLanguage", lang);
+    }
+
+    enBtn.addEventListener("click", () => applyLanguage("en"));
+    arBtn.addEventListener("click", () => applyLanguage("ar"));
+
+    const savedLanguage = localStorage.getItem("siteLanguage") || "en";
+    applyLanguage(savedLanguage);
+  </script>
+</body>
+</html>

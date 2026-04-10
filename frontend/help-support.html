@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Help & Support</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: #1b2b34;
+      background:
+        radial-gradient(circle at top left, rgba(74, 163, 175, 0.16), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(74, 163, 175, 0.18), transparent 24%),
+        linear-gradient(135deg, #d9edf0 0%, #f4f2fa 48%, #d7eef1 100%);
+    }
+
+    .page-shell {
+      max-width: 1380px;
+      margin: 24px auto;
+      padding: 0 20px 24px;
+    }
+
+    .topbar {
+      min-height: 110px;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.38);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 10px 30px rgba(40, 70, 90, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      gap: 16px;
+    }
+
+    .logo-box {
+      min-width: 280px;
+      max-width: 330px;
+      min-height: 72px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 8px 22px rgba(50, 80, 100, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+    }
+
+    .logo-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #48a8b3, #2f7f8b);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      line-height: 1.15;
+    }
+
+    .logo-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #2a6f79;
+    }
+
+    .logo-subtitle {
+      font-size: 13px;
+      color: #445b66;
+      margin-top: 4px;
+      font-weight: 700;
+    }
+
+    .page-title {
+      font-size: 40px;
+      font-weight: 800;
+      color: #233746;
+      text-align: center;
+      flex: 1;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .user-box {
+      min-width: 150px;
+      text-align: right;
+      font-size: 18px;
+      font-weight: 700;
+      color: #35515d;
+    }
+
+    .lang-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 8px 18px rgba(50, 80, 100, 0.08);
+    }
+
+    .lang-btn {
+      min-width: 62px;
+      height: 42px;
+      border: none;
+      border-radius: 999px;
+      background: transparent;
+      color: #55707a;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .lang-btn.active {
+      background: linear-gradient(135deg, #1b97a5, #147886);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(20, 120, 134, 0.28);
+    }
+
+    .layout {
+      display: flex;
+      gap: 22px;
+      min-height: calc(100vh - 180px);
+    }
+
+   .sidebar {
+  width: 250px;
+  height: 100vh; /* 🔥 هذا المهم */
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.34);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 14px 34px rgba(43, 69, 88, 0.08);
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu,
+.bottom-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bottom-links {
+  margin-top: auto;
+}
+
+    .divider {
+      height: 1px;
+      background: rgba(86, 108, 117, 0.18);
+      margin: 8px 6px;
+      border: none;
+    }
+
+    .nav-link {
+      display: block;
+      text-decoration: none;
+      color: #314b56;
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-size: 17px;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .nav-link:hover {
+      background: rgba(221, 236, 237, 0.85);
+      transform: translateX(2px);
+    }
+
+    .nav-link.active {
+      background: linear-gradient(135deg, rgba(27, 151, 165, 0.18), rgba(20, 120, 134, 0.12));
+      color: #155c66;
+      box-shadow: inset 0 0 0 1px rgba(27, 151, 165, 0.14);
+    }
+
+    .content {
+      flex: 1;
+      border: 1px solid rgba(255, 255, 255, 0.62);
+      border-radius: 32px;
+      background: rgba(255, 255, 255, 0.34);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 14px 34px rgba(43, 69, 88, 0.08);
+      padding: 30px 28px;
+    }
+
+    .section-title {
+      font-size: 30px;
+      font-weight: 800;
+      color: #233746;
+      margin-bottom: 18px;
+    }
+
+    .help-card {
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.48);
+      box-shadow: 0 10px 24px rgba(40, 70, 90, 0.05);
+      padding: 24px 24px;
+      margin-bottom: 20px;
+    }
+
+    .help-card h3 {
+      font-size: 23px;
+      margin-bottom: 14px;
+      font-weight: 800;
+      color: #117e8c;
+    }
+
+    .help-card p {
+      font-size: 17px;
+      line-height: 1.85;
+      color: #4c6571;
+    }
+
+    .faq-item,
+    .tip-item,
+    .policy-item,
+    .contact-item {
+      margin-bottom: 14px;
+      font-size: 16px;
+      line-height: 1.8;
+      color: #35515d;
+    }
+
+    .faq-item strong,
+    .tip-item strong,
+    .policy-item strong,
+    .contact-item strong {
+      color: #233746;
+    }
+
+    body.rtl {
+  direction: rtl;
+}
+
+body.rtl .topbar {
+  flex-direction: row-reverse;
+}
+
+body.rtl .logo-box {
+  flex-direction: row-reverse;
+}
+
+body.rtl .logo-text {
+  text-align: right;
+}
+
+body.rtl .header-right {
+  flex-direction: row-reverse;
+}
+
+body.rtl .user-box {
+  text-align: left;
+}
+
+
+body.rtl .section-title {
+  text-align: right;
+}
+
+body.rtl .nav-link:hover {
+  transform: translateX(-2px);
+}
+
+    @media (max-width: 930px) {
+      .layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page-shell {
+        padding: 0 12px 18px;
+      }
+
+      .topbar {
+        padding: 18px 16px;
+        gap: 14px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      body.rtl .topbar {
+        flex-direction: column;
+      }
+
+      .logo-box {
+        min-width: unset;
+        width: 100%;
+      }
+
+      .header-right {
+        justify-content: space-between;
+      }
+
+      .page-title {
+        font-size: 30px;
+      }
+
+      .content {
+        padding: 22px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="topbar">
+      <div class="logo-box">
+        <div class="logo-icon">🦷</div>
+        <div class="logo-text">
+          <div class="logo-title" id="logoTitle">SoftwareDoctors</div>
+          <div class="logo-subtitle" id="logoSubtitle">Dental Clinic Management System</div>
+        </div>
+      </div>
+
+      <div class="page-title" id="pageTitle">Help & Support</div>
+
+      <div class="header-right">
+        <div class="user-box" id="userNameBox">User</div>
+
+        <div class="lang-toggle">
+          <button class="lang-btn active" id="enBtn" type="button">EN</button>
+          <button class="lang-btn" id="arBtn" type="button">AR</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside class="sidebar">
+       <div class="menu">
+  <a class="nav-link" href="dashboard.html" id="navDashboard">☷ Dashboard</a>
+  <hr class="divider">
+  <a class="nav-link" href="appointment.html" id="navAppointment">🗓 Booking Appointment</a>
+  <a class="nav-link" href="prescriptions.html" id="navPrescriptions">💊 Prescriptions</a>
+  <a class="nav-link" href="profile.html" id="navProfile">👤 Profile</a>
+</div>
+
+        <div class="bottom-links">
+  <hr class="divider">
+  <a class="nav-link active" href="help-support.html" id="bottomHelp">❓ Help & Support</a>
+  <a class="nav-link" href="#" id="logoutBtn">⇦ Logout</a>
+</div>
+      </aside>
+
+      <main class="content">
+        <h2 class="section-title" id="sectionTitle">Help & Support</h2>
+
+        <div class="help-card">
+          <h3 id="welcomeTitle">Welcome</h3>
+          <p id="welcomeText">
+            Welcome to the Help & Support page. Here you can find useful information
+            about how to use the dental clinic system and important instructions for patients.
+          </p>
+        </div>
+
+        <div class="help-card">
+          <h3 id="faqTitle">Frequently Asked Questions</h3>
+
+          <div class="faq-item" id="faq1">
+            <strong>How can I book an appointment?</strong><br>
+            You can book an appointment from the Booking Appointment page by selecting a doctor, date, and available time slot.
+          </div>
+
+          <div class="faq-item" id="faq2">
+            <strong>How can I view my prescriptions?</strong><br>
+            You can check all your prescriptions from the Prescriptions page after logging in.
+          </div>
+
+          <div class="faq-item" id="faq3">
+            <strong>How can I update my profile information?</strong><br>
+            You can update your personal details from the Profile page and then click Save Changes.
+          </div>
+
+          <div class="faq-item" id="faq4">
+            <strong>What should I do if I forget my password?</strong><br>
+            Please contact the clinic administrator or support team for assistance.
+          </div>
+        </div>
+
+        <div class="help-card">
+          <h3 id="tipsTitle">Patient Tips</h3>
+
+          <div class="tip-item" id="tip1">
+            <strong>Tip 1:</strong> Please arrive at least 10 minutes before your appointment time.
+          </div>
+
+          <div class="tip-item" id="tip2">
+            <strong>Tip 2:</strong> Make sure your profile information is correct and updated.
+          </div>
+
+          <div class="tip-item" id="tip3">
+            <strong>Tip 3:</strong> Inform the clinic in advance if you need to cancel or reschedule an appointment.
+          </div>
+
+          <div class="tip-item" id="tip4">
+            <strong>Tip 4:</strong> Follow the doctor’s prescription instructions carefully.
+          </div>
+        </div>
+
+        <div class="help-card">
+          <h3 id="policyTitle">Clinic Policy</h3>
+
+          <div class="policy-item" id="policy1">
+            <strong>Policy 1:</strong> Appointments should be booked in advance through the system.
+          </div>
+
+          <div class="policy-item" id="policy2">
+            <strong>Policy 2:</strong> Patients must provide correct personal information.
+          </div>
+
+          <div class="policy-item" id="policy3">
+            <strong>Policy 3:</strong> Missed appointments may require rescheduling.
+          </div>
+
+          <div class="policy-item" id="policy4">
+            <strong>Policy 4:</strong> Prescriptions are issued only by authorized doctors.
+          </div>
+        </div>
+
+        <div class="help-card">
+          <h3 id="contactTitle">Contact Information</h3>
+
+          <div class="contact-item" id="contact1">
+            <strong>Phone:</strong> +965 2222 3333
+          </div>
+
+          <div class="contact-item" id="contact2">
+            <strong>Email:</strong> support@softwaredoctors.com
+          </div>
+
+          <div class="contact-item" id="contact3">
+            <strong>Working Hours:</strong> Sunday to Thursday, 8:00 AM - 5:00 PM
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+    if (!loggedInUser) {
+      window.location.href = "login.html";
+    }
+
+    const userNameBox = document.getElementById("userNameBox");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const enBtn = document.getElementById("enBtn");
+    const arBtn = document.getElementById("arBtn");
+
+    const content = {
+      en: {
+        htmlLang: "en",
+        dir: "ltr",
+        title: "Help & Support",
+        logoTitle: "SoftwareDoctors",
+        logoSubtitle: "Dental Clinic Management System",
+        pageTitle: "Help & Support",
+        navDashboard: "☷ Dashboard",
+        navAppointment: "🗓 Booking Appointment",
+        navPrescriptions: "💊 Prescriptions",
+        navProfile: "👤 Profile",
+        navHelp: "❓ Help & Support",
+        navLogout: "⇦ Logout",
+        sectionTitle: "Help & Support",
+        welcomeTitle: "Welcome",
+        welcomeText: "Welcome to the Help & Support page. Here you can find useful information about how to use the dental clinic system and important instructions for patients.",
+        faqTitle: "Frequently Asked Questions",
+        faq1: "<strong>How can I book an appointment?</strong><br>You can book an appointment from the Booking Appointment page by selecting a doctor, date, and available time slot.",
+        faq2: "<strong>How can I view my prescriptions?</strong><br>You can check all your prescriptions from the Prescriptions page after logging in.",
+        faq3: "<strong>How can I update my profile information?</strong><br>You can update your personal details from the Profile page and then click Save Changes.",
+        faq4: "<strong>What should I do if I forget my password?</strong><br>Please contact the clinic administrator or support team for assistance.",
+        tipsTitle: "Patient Tips",
+        tip1: "<strong>Tip 1:</strong> Please arrive at least 10 minutes before your appointment time.",
+        tip2: "<strong>Tip 2:</strong> Make sure your profile information is correct and updated.",
+        tip3: "<strong>Tip 3:</strong> Inform the clinic in advance if you need to cancel or reschedule an appointment.",
+        tip4: "<strong>Tip 4:</strong> Follow the doctor’s prescription instructions carefully.",
+        policyTitle: "Clinic Policy",
+        policy1: "<strong>Policy 1:</strong> Appointments should be booked in advance through the system.",
+        policy2: "<strong>Policy 2:</strong> Patients must provide correct personal information.",
+        policy3: "<strong>Policy 3:</strong> Missed appointments may require rescheduling.",
+        policy4: "<strong>Policy 4:</strong> Prescriptions are issued only by authorized doctors.",
+        contactTitle: "Contact Information",
+        contact1: "<strong>Phone:</strong> +965 2222 3333",
+        contact2: "<strong>Email:</strong> support@softwaredoctors.com",
+        contact3: "<strong>Working Hours:</strong> Sunday to Thursday, 8:00 AM - 5:00 PM"
+      },
+      ar: {
+        htmlLang: "ar",
+        dir: "rtl",
+        title: "المساعدة والدعم",
+        logoTitle: "SoftwareDoctors",
+        logoSubtitle: "نظام إدارة عيادة الأسنان",
+        pageTitle: "المساعدة والدعم",
+        navDashboard: "☷ لوحة التحكم",
+        navAppointment: "🗓 حجز موعد",
+        navPrescriptions: "💊 الوصفات الطبية",
+        navProfile: "👤 الملف الشخصي",
+        navHelp: "❓ المساعدة والدعم",
+        navLogout: "⇦ تسجيل الخروج",
+        sectionTitle: "المساعدة والدعم",
+        welcomeTitle: "مرحبًا",
+        welcomeText: "مرحبًا بك في صفحة المساعدة والدعم. هنا يمكنك العثور على معلومات مفيدة حول كيفية استخدام نظام عيادة الأسنان وتعليمات مهمة للمريض.",
+        faqTitle: "الأسئلة الشائعة",
+        faq1: "<strong>كيف يمكنني حجز موعد؟</strong><br>يمكنك حجز موعد من صفحة حجز المواعيد عن طريق اختيار الطبيب والتاريخ والوقت المتاح.",
+        faq2: "<strong>كيف يمكنني عرض الوصفات الطبية الخاصة بي؟</strong><br>يمكنك الاطلاع على جميع الوصفات الطبية من صفحة الوصفات بعد تسجيل الدخول.",
+        faq3: "<strong>كيف يمكنني تحديث بيانات ملفي الشخصي؟</strong><br>يمكنك تحديث بياناتك الشخصية من صفحة الملف الشخصي ثم الضغط على حفظ التغييرات.",
+        faq4: "<strong>ماذا أفعل إذا نسيت كلمة المرور؟</strong><br>يرجى التواصل مع مسؤول العيادة أو فريق الدعم للمساعدة.",
+        tipsTitle: "نصائح للمريض",
+        tip1: "<strong>نصيحة 1:</strong> يرجى الحضور قبل موعدك بعشر دقائق على الأقل.",
+        tip2: "<strong>نصيحة 2:</strong> تأكد من أن معلومات ملفك الشخصي صحيحة ومحدّثة.",
+        tip3: "<strong>نصيحة 3:</strong> أخبر العيادة مسبقًا إذا كنت بحاجة إلى إلغاء الموعد أو إعادة جدولة الموعد.",
+        tip4: "<strong>نصيحة 4:</strong> اتبع تعليمات الطبيب الخاصة بالوصفة الطبية بدقة.",
+        policyTitle: "سياسة العيادة",
+        policy1: "<strong>سياسة 1:</strong> يجب حجز المواعيد مسبقًا من خلال النظام.",
+        policy2: "<strong>سياسة 2:</strong> يجب على المرضى تقديم معلومات شخصية صحيحة.",
+        policy3: "<strong>سياسة 3:</strong> قد تتطلب المواعيد الفائتة إعادة الجدولة.",
+        policy4: "<strong>سياسة 4:</strong> تصدر الوصفات الطبية فقط من قبل الأطباء المعتمدين.",
+        contactTitle: "معلومات التواصل",
+        contact1: "<strong>الهاتف:</strong> +965 2222 3333",
+        contact2: "<strong>البريد الإلكتروني:</strong> support@softwaredoctors.com",
+        contact3: "<strong>ساعات العمل:</strong> من الأحد إلى الخميس، 8:00 صباحًا - 5:00 مساءً"
+      }
+    };
+
+    function applyLanguage(lang) {
+      const selected = content[lang];
+
+      document.documentElement.lang = selected.htmlLang;
+      document.documentElement.dir = selected.dir;
+      document.body.classList.toggle("rtl", lang === "ar");
+      document.title = selected.title;
+
+      document.getElementById("logoTitle").textContent = selected.logoTitle;
+      document.getElementById("logoSubtitle").textContent = selected.logoSubtitle;
+      document.getElementById("pageTitle").textContent = selected.pageTitle;
+      document.getElementById("navDashboard").textContent = selected.navDashboard;
+      document.getElementById("navAppointment").textContent = selected.navAppointment;
+      document.getElementById("navPrescriptions").textContent = selected.navPrescriptions;
+      document.getElementById("navProfile").textContent = selected.navProfile;
+      document.getElementById("bottomHelp").textContent = selected.navHelp;
+      document.getElementById("logoutBtn").textContent = selected.navLogout;
+      document.getElementById("sectionTitle").textContent = selected.sectionTitle;
+      document.getElementById("welcomeTitle").textContent = selected.welcomeTitle;
+      document.getElementById("welcomeText").textContent = selected.welcomeText;
+      document.getElementById("faqTitle").textContent = selected.faqTitle;
+      document.getElementById("faq1").innerHTML = selected.faq1;
+      document.getElementById("faq2").innerHTML = selected.faq2;
+      document.getElementById("faq3").innerHTML = selected.faq3;
+      document.getElementById("faq4").innerHTML = selected.faq4;
+      document.getElementById("tipsTitle").textContent = selected.tipsTitle;
+      document.getElementById("tip1").innerHTML = selected.tip1;
+      document.getElementById("tip2").innerHTML = selected.tip2;
+      document.getElementById("tip3").innerHTML = selected.tip3;
+      document.getElementById("tip4").innerHTML = selected.tip4;
+      document.getElementById("policyTitle").textContent = selected.policyTitle;
+      document.getElementById("policy1").innerHTML = selected.policy1;
+      document.getElementById("policy2").innerHTML = selected.policy2;
+      document.getElementById("policy3").innerHTML = selected.policy3;
+      document.getElementById("policy4").innerHTML = selected.policy4;
+      document.getElementById("contactTitle").textContent = selected.contactTitle;
+      document.getElementById("contact1").innerHTML = selected.contact1;
+      document.getElementById("contact2").innerHTML = selected.contact2;
+      document.getElementById("contact3").innerHTML = selected.contact3;
+
+      userNameBox.textContent = loggedInUser.full_name || "Patient";
+
+      enBtn.classList.toggle("active", lang === "en");
+      arBtn.classList.toggle("active", lang === "ar");
+
+      localStorage.setItem("siteLanguage", lang);
+    }
+
+    logoutBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "home.html";
+    });
+
+    enBtn.addEventListener("click", () => applyLanguage("en"));
+    arBtn.addEventListener("click", () => applyLanguage("ar"));
+
+    const savedLanguage = localStorage.getItem("siteLanguage") || "en";
+    applyLanguage(savedLanguage);
+  </script>
+</body>
+</html>

@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prescriptions</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: #1b2b34;
+      background:
+        radial-gradient(circle at top left, rgba(74, 163, 175, 0.16), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(74, 163, 175, 0.18), transparent 24%),
+        linear-gradient(135deg, #d9edf0 0%, #f4f2fa 48%, #d7eef1 100%);
+    }
+
+    .page-shell {
+      max-width: 1380px;
+      margin: 24px auto;
+      padding: 0 20px 24px;
+    }
+
+    .topbar {
+      min-height: 110px;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.38);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 10px 30px rgba(40, 70, 90, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      gap: 16px;
+    }
+
+    .logo-box {
+      min-width: 280px;
+      max-width: 330px;
+      min-height: 72px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 8px 22px rgba(50, 80, 100, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+    }
+
+    .logo-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #48a8b3, #2f7f8b);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      line-height: 1.15;
+    }
+
+    .logo-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #2a6f79;
+    }
+
+    .logo-subtitle {
+      font-size: 13px;
+      color: #445b66;
+      margin-top: 4px;
+      font-weight: 700;
+    }
+
+    .page-title {
+      font-size: 40px;
+      font-weight: 800;
+      color: #233746;
+      text-align: center;
+      flex: 1;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .user-box {
+      min-width: 150px;
+      text-align: right;
+      font-size: 18px;
+      font-weight: 700;
+      color: #35515d;
+    }
+
+    .lang-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 8px 18px rgba(50, 80, 100, 0.08);
+    }
+
+    .lang-btn {
+      min-width: 62px;
+      height: 42px;
+      border: none;
+      border-radius: 999px;
+      background: transparent;
+      color: #55707a;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .lang-btn.active {
+      background: linear-gradient(135deg, #1b97a5, #147886);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(20, 120, 134, 0.28);
+    }
+
+    .layout {
+      display: flex;
+      gap: 22px;
+      min-height: calc(100vh - 180px);
+    }
+
+    .sidebar {
+      width: 250px;
+      border: 1px solid rgba(255, 255, 255, 0.62);
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.34);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 14px 34px rgba(43, 69, 88, 0.08);
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .menu,
+    .bottom-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(86, 108, 117, 0.18);
+      margin: 8px 6px;
+      border: none;
+    }
+
+    .nav-link {
+      display: block;
+      text-decoration: none;
+      color: #314b56;
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-size: 17px;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .nav-link:hover {
+      background: rgba(221, 236, 237, 0.85);
+      transform: translateX(2px);
+    }
+
+    .nav-link.active {
+      background: linear-gradient(135deg, rgba(27, 151, 165, 0.18), rgba(20, 120, 134, 0.12));
+      color: #155c66;
+      box-shadow: inset 0 0 0 1px rgba(27, 151, 165, 0.14);
+    }
+
+    .content {
+      flex: 1;
+      border: 1px solid rgba(255, 255, 255, 0.62);
+      border-radius: 32px;
+      background: rgba(255, 255, 255, 0.34);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 14px 34px rgba(43, 69, 88, 0.08);
+      padding: 30px 28px;
+    }
+
+    .section-title {
+      font-size: 30px;
+      font-weight: 800;
+      color: #233746;
+      margin-bottom: 18px;
+    }
+
+    .message-box {
+      display: none;
+      margin-bottom: 18px;
+      padding: 15px 18px;
+      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    .message-box.show {
+      display: block;
+    }
+
+    .message-box.error {
+      background: rgba(255, 240, 240, 0.92);
+      color: #b42318;
+      border-color: #f0b4b4;
+    }
+
+    .search-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .search-input {
+      width: 220px;
+      height: 44px;
+      border: 1px solid rgba(72, 104, 117, 0.18);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 0 16px;
+      font-size: 16px;
+      color: #27414d;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .search-input:focus {
+      border-color: #0c6771;
+      box-shadow: 0 0 0 3px rgba(12, 103, 113, 0.12);
+    }
+
+    .filter-btn {
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(72, 104, 117, 0.18);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.82);
+      font-size: 18px;
+      cursor: pointer;
+      color: #314b56;
+    }
+
+    .table-head {
+      display: grid;
+      grid-template-columns: 1.7fr 1.5fr 1fr 1fr;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 0 14px 10px;
+      margin-bottom: 8px;
+      color: #36515c;
+    }
+
+    .card-box {
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.48);
+      box-shadow: 0 10px 24px rgba(40, 70, 90, 0.05);
+      overflow: hidden;
+    }
+
+    .prescription-row {
+      display: grid;
+      grid-template-columns: 1.7fr 1.5fr 1fr 1fr;
+      align-items: center;
+      min-height: 96px;
+      border-top: 1px solid rgba(86, 108, 117, 0.15);
+      padding: 0 14px;
+    }
+
+    .prescription-row:first-child {
+      border-top: none;
+    }
+
+    .medicine-cell,
+    .doctor-cell,
+    .status-cell,
+    .action-cell {
+      padding: 12px 8px;
+      font-size: 16px;
+    }
+
+    .medicine-box,
+    .doctor-box {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .medicine-name,
+    .doctor-name {
+      font-size: 17px;
+      font-weight: 800;
+      color: #233746;
+    }
+
+    .medicine-sub,
+    .doctor-spec {
+      font-size: 14px;
+      color: #617986;
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      min-width: 94px;
+      text-align: center;
+    }
+
+    .approved {
+      background: rgba(183, 232, 191, 0.9);
+      color: #11803b;
+    }
+
+    .pending {
+      background: rgba(227, 193, 99, 0.9);
+      color: #7c5a00;
+    }
+
+    .view-btn {
+      display: inline-block;
+      padding: 10px 18px;
+      border: 1px solid rgba(72, 104, 117, 0.18);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.82);
+      font-size: 14px;
+      font-weight: 800;
+      text-align: center;
+      color: #314b56;
+    }
+
+    .empty-box {
+      padding: 28px;
+      text-align: center;
+      color: #617986;
+      font-size: 17px;
+      border-top: 1px solid rgba(86, 108, 117, 0.15);
+    }
+
+    .empty-box:first-child {
+      border-top: none;
+    }
+
+    body.rtl {
+  direction: rtl;
+}
+
+body.rtl .topbar {
+  flex-direction: row-reverse;
+}
+
+body.rtl .logo-box {
+  flex-direction: row-reverse;
+}
+
+body.rtl .logo-text {
+  text-align: right;
+}
+
+body.rtl .header-right {
+  flex-direction: row-reverse;
+}
+
+body.rtl .user-box {
+  text-align: left;
+}
+
+body.rtl .section-title {
+  text-align: right;
+}
+
+body.rtl .nav-link:hover {
+  transform: translateX(-2px);
+}
+
+    @media (max-width: 1080px) {
+      .table-head,
+      .prescription-row {
+        grid-template-columns: 1fr;
+      }
+
+      .medicine-cell,
+      .doctor-cell,
+      .status-cell,
+      .action-cell {
+        text-align: center;
+      }
+
+      .medicine-box,
+      .doctor-box {
+        align-items: center;
+      }
+
+      .search-row {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 930px) {
+      .layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page-shell {
+        padding: 0 12px 18px;
+      }
+
+      .topbar {
+        padding: 18px 16px;
+        gap: 14px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      body.rtl .topbar {
+        flex-direction: column;
+      }
+
+      .logo-box {
+        min-width: unset;
+        width: 100%;
+      }
+
+      .header-right {
+        justify-content: space-between;
+      }
+
+      .page-title {
+        font-size: 30px;
+      }
+
+      .content {
+        padding: 22px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="topbar">
+      <div class="logo-box">
+        <div class="logo-icon">🦷</div>
+        <div class="logo-text">
+          <div class="logo-title" id="logoTitle">SoftwareDoctors</div>
+          <div class="logo-subtitle" id="logoSubtitle">Dental Clinic Management System</div>
+        </div>
+      </div>
+
+      <div class="page-title" id="pageTitle">Prescriptions</div>
+
+      <div class="header-right">
+        <div class="user-box" id="userNameBox">User</div>
+
+        <div class="lang-toggle">
+          <button class="lang-btn active" id="enBtn" type="button">EN</button>
+          <button class="lang-btn" id="arBtn" type="button">AR</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="menu">
+          <a class="nav-link" href="dashboard.html" id="navDashboard">☷ Dashboard</a>
+          <hr class="divider">
+          <a class="nav-link" href="appointment.html" id="navAppointment">🗓 Booking Appointment</a>
+          <a class="nav-link active" href="prescriptions.html" id="navPrescriptions">💊 Prescriptions</a>
+          <a class="nav-link" href="profile.html" id="navProfile">👤 Profile</a>
+        </div>
+
+        <div class="bottom-links">
+          <hr class="divider">
+          <a class="nav-link" href="help-support.html" id="navHelp">❓ Help & Support</a>
+          <a class="nav-link" href="#" id="logoutBtn">⇦ Logout</a>
+        </div>
+      </aside>
+
+      <main class="content">
+        <h2 class="section-title" id="sectionTitle">Prescriptions</h2>
+
+        <div id="messageBox" class="message-box"></div>
+
+        <div class="search-row">
+          <input type="text" id="searchInput" class="search-input" placeholder="search..." />
+          <button class="filter-btn" type="button">⏷</button>
+        </div>
+
+        <div class="table-head">
+          <div id="headMedicine">Medicine</div>
+          <div id="headDoctor">Doctor</div>
+          <div id="headStatus">Status</div>
+          <div id="headAction">Action</div>
+        </div>
+
+        <div class="card-box" id="prescriptionsContainer">
+          <div class="empty-box" id="loadingText">Loading...</div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+    if (!loggedInUser) {
+      window.location.href = "login.html";
+    }
+
+    const userNameBox = document.getElementById("userNameBox");
+    const prescriptionsContainer = document.getElementById("prescriptionsContainer");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const searchInput = document.getElementById("searchInput");
+    const messageBox = document.getElementById("messageBox");
+    const enBtn = document.getElementById("enBtn");
+    const arBtn = document.getElementById("arBtn");
+
+    let patientData = null;
+    let doctorsMap = {};
+    let allMyPrescriptions = [];
+
+    const content = {
+      en: {
+        htmlLang: "en",
+        dir: "ltr",
+        title: "Prescriptions",
+        logoTitle: "SoftwareDoctors",
+        logoSubtitle: "Dental Clinic Management System",
+        pageTitle: "Prescriptions",
+        navDashboard: "☷ Dashboard",
+        navAppointment: "🗓 Booking Appointment",
+        navPrescriptions: "💊 Prescriptions",
+        navProfile: "👤 Profile",
+        navHelp: "❓ Help & Support",
+        navLogout: "⇦ Logout",
+        sectionTitle: "Prescriptions",
+        searchPlaceholder: "search...",
+        headMedicine: "Medicine",
+        headDoctor: "Doctor",
+        headStatus: "Status",
+        headAction: "Action",
+        loadingText: "Loading...",
+        noData: "No prescriptions found",
+        failedLoad: "Failed to load prescriptions",
+        doctorFallback: "Doctor",
+        approved: "Approved",
+        pending: "Pending",
+        viewDetails: "View Details"
+      },
+      ar: {
+        htmlLang: "ar",
+        dir: "rtl",
+        title: "الوصفات الطبية",
+        logoTitle: "SoftwareDoctors",
+        logoSubtitle: "نظام إدارة عيادة الأسنان",
+        pageTitle: "الوصفات الطبية",
+        navDashboard: "☷ لوحة التحكم",
+        navAppointment: "🗓 حجز موعد",
+        navPrescriptions: "💊 الوصفات الطبية",
+        navProfile: "👤 الملف الشخصي",
+        navHelp: "❓ المساعدة والدعم",
+        navLogout: "⇦ تسجيل الخروج",
+        sectionTitle: "الوصفات الطبية",
+        searchPlaceholder: "بحث...",
+        headMedicine: "الدواء",
+        headDoctor: "الطبيب",
+        headStatus: "الحالة",
+        headAction: "الإجراء",
+        loadingText: "جاري التحميل...",
+        noData: "لا توجد وصفات طبية",
+        failedLoad: "فشل في تحميل الوصفات الطبية",
+        doctorFallback: "طبيب",
+        approved: "معتمد",
+        pending: "قيد الانتظار",
+        viewDetails: "عرض التفاصيل"
+      }
+    };
+
+    function showMessage(message, type = "error") {
+      messageBox.textContent = message;
+      messageBox.className = `message-box show ${type}`;
+    }
+
+    function clearMessage() {
+      messageBox.textContent = "";
+      messageBox.className = "message-box";
+    }
+
+    function applyLanguage(lang) {
+      const selected = content[lang];
+
+      document.documentElement.lang = selected.htmlLang;
+      document.documentElement.dir = selected.dir;
+      document.body.classList.toggle("rtl", lang === "ar");
+      document.title = selected.title;
+
+      document.getElementById("logoTitle").textContent = selected.logoTitle;
+      document.getElementById("logoSubtitle").textContent = selected.logoSubtitle;
+      document.getElementById("pageTitle").textContent = selected.pageTitle;
+      document.getElementById("navDashboard").textContent = selected.navDashboard;
+      document.getElementById("navAppointment").textContent = selected.navAppointment;
+      document.getElementById("navPrescriptions").textContent = selected.navPrescriptions;
+      document.getElementById("navProfile").textContent = selected.navProfile;
+      document.getElementById("navHelp").textContent = selected.navHelp;
+      document.getElementById("logoutBtn").textContent = selected.navLogout;
+      document.getElementById("sectionTitle").textContent = selected.sectionTitle;
+      document.getElementById("headMedicine").textContent = selected.headMedicine;
+      document.getElementById("headDoctor").textContent = selected.headDoctor;
+      document.getElementById("headStatus").textContent = selected.headStatus;
+      document.getElementById("headAction").textContent = selected.headAction;
+     
+
+const loadingTextEl = document.getElementById("loadingText");
+if (loadingTextEl) {
+  loadingTextEl.textContent = selected.loadingText;
+}
+
+document.getElementById("searchInput").placeholder = selected.searchPlaceholder;
+
+userNameBox.textContent = loggedInUser.full_name || "Patient";
+
+enBtn.classList.toggle("active", lang === "en");
+arBtn.classList.toggle("active", lang === "ar");
+
+localStorage.setItem("siteLanguage", lang);
+}
+    async function loadPatient() {
+      const response = await fetch(`http://localhost:5050/my-patient/${loggedInUser.user_id}`);
+      const data = await response.json();
+
+      if (data.success) {
+        patientData = data.patient;
+      } else {
+        throw new Error("Patient not found");
+      }
+    }
+
+    async function loadDoctors() {
+      const response = await fetch("http://localhost:5050/doctors");
+      const doctors = await response.json();
+
+      doctorsMap = {};
+      doctors.forEach((doctor) => {
+        doctorsMap[doctor.doctor_id] = doctor;
+      });
+    }
+
+    function renderPrescriptions(list) {
+      const currentLang = localStorage.getItem("siteLanguage") || "en";
+
+      if (!list.length) {
+        prescriptionsContainer.innerHTML = `<div class="empty-box">${content[currentLang].noData}</div>`;
+        return;
+      }
+
+      prescriptionsContainer.innerHTML = list.map((item) => {
+        const doctor = doctorsMap[item.doctor_id];
+        const doctorName = doctor ? doctor.full_name : content[currentLang].doctorFallback;
+        const doctorSpec = doctor ? (doctor.specialization || "") : "";
+
+       const rawStatus = item.status || "Approved";
+const statusClass = rawStatus === "Pending" ? "pending" : "approved";
+
+let statusText = rawStatus;
+if (currentLang === "ar") {
+  if (rawStatus === "Pending") statusText = content[currentLang].pending;
+  if (rawStatus === "Approved") statusText = content[currentLang].approved;
+}
+        const medLine2 =
+          [item.dosage, item.frequency].filter(Boolean).join(" • ") ||
+          item.treatment_duration ||
+          "";
+
+        return `
+          <div class="prescription-row">
+            <div class="medicine-cell">
+              <div class="medicine-box">
+                <div class="medicine-name">${item.medication_name || "-"}</div>
+                <div class="medicine-sub">${medLine2}</div>
+              </div>
+            </div>
+
+            <div class="doctor-cell">
+              <div class="doctor-box">
+                <div class="doctor-name">${doctorName}</div>
+                <div class="doctor-spec">${doctorSpec}</div>
+              </div>
+            </div>
+
+            <div class="status-cell">
+              <span class="status-pill ${statusClass}">${statusText}</span>
+            </div>
+
+            <div class="action-cell">
+              <span class="view-btn">${content[currentLang].viewDetails}</span>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function loadPrescriptions() {
+      const response = await fetch("http://localhost:5050/prescriptions");
+      const prescriptions = await response.json();
+
+      allMyPrescriptions = prescriptions.filter(
+        item => Number(item.patient_id) === Number(patientData.patient_id)
+      );
+
+      renderPrescriptions(allMyPrescriptions);
+    }
+
+    searchInput.addEventListener("input", function () {
+      const value = this.value.trim().toLowerCase();
+
+      const filtered = allMyPrescriptions.filter((item) => {
+        const doctor = doctorsMap[item.doctor_id];
+        const doctorName = doctor ? doctor.full_name.toLowerCase() : "";
+        const medication = item.medication_name ? item.medication_name.toLowerCase() : "";
+        return medication.includes(value) || doctorName.includes(value);
+      });
+
+      renderPrescriptions(filtered);
+    });
+
+    logoutBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "home.html";
+    });
+
+    enBtn.addEventListener("click", () => {
+      applyLanguage("en");
+      renderPrescriptions(allMyPrescriptions);
+    });
+
+    arBtn.addEventListener("click", () => {
+      applyLanguage("ar");
+      renderPrescriptions(allMyPrescriptions);
+    });
+
+    async function init() {
+      try {
+        clearMessage();
+        await loadPatient();
+        await loadDoctors();
+        await loadPrescriptions();
+      } catch (error) {
+        console.error(error);
+        showMessage(content[localStorage.getItem("siteLanguage") || "en"].failedLoad, "error");
+        prescriptionsContainer.innerHTML = `<div class="empty-box">${content[localStorage.getItem("siteLanguage") || "en"].failedLoad}</div>`;
+      }
+    }
+
+    const savedLanguage = localStorage.getItem("siteLanguage") || "en";
+    applyLanguage(savedLanguage);
+    init();
+  </script>
+</body>
+</html>
