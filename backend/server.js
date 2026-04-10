@@ -320,16 +320,16 @@ app.post("/register", async (req, res) => {
       user: newUser.rows[0],
       patient: newPatient.rows[0]
     });
-  } catch (err) {
-    await client.query("ROLLBACK");
-    console.error("POST /register error:", err.message);
-    res.status(500).json({
-      success: false,
-      message: "Server error during registration"
-    });
-  } finally {
-    client.release();
-  }
+ } catch (err) {
+  await client.query("ROLLBACK");
+  console.error("POST /register error:", err.message);
+  res.status(500).json({
+    success: false,
+    message: err.message
+  });
+} finally {
+  client.release();
+}
 });
 
 /* =========================
